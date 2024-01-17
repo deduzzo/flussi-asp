@@ -7,9 +7,8 @@ $this->title = Yii::$app->name;
 <div class="site-index">
 
     <div class="jumbotron text-center bg-transparent mt-5 mb-5">
-        <h1 class="display-4">Gestione Flussi Informativi ASP 5 Messina</h1>
-
-        <p class="lead">ASP 5 Messina</p>
+        <h1 class="display-4">Gestione Flussi Informativi</h1>
+        <p class="display-6">ASP 5 Messina</p>
     </div>
 
     <div class="body-content">
@@ -20,7 +19,8 @@ $this->title = Yii::$app->name;
 
                 <p>Assegnazione PIC e invio PAI in convenzionamento</p>
 
-                <p><a class="btn btn-outline-secondary" href="/siad/index">Assistenza ADI</a></p>
+                <a class="btn btn-outline-secondary" href="/siad/index">Nuova PIC</a>
+                <a class="btn btn-outline-secondary" href="/siad/cerca">Cerca</a>
             </div>
             <div class="col-lg-4 mb-3">
                 <!--<h2>Heading</h2>

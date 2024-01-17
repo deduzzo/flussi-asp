@@ -2,13 +2,13 @@
 
 namespace app\controllers;
 
+use app\models\utils\Utils;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
-use app\models\ContactForm;
 
 class SiteController extends Controller
 {
@@ -99,10 +99,8 @@ class SiteController extends Controller
     }
 
     public function actionTest() {
-        $parser = new \Smalot\PdfParser\Parser();
-        $pdf = $parser->parseFile('/Users/deduzzo/Downloads/report.pdf');
-
-        $text = $pdf->gettext();
-        print_r($text);
+        $fileName = 'D:\DATI\Download\report(1).pdf';
+       $dati = Utils::ottieniDatiPICfromPDF($fileName);
+       print_r($dati);
     }
 }
