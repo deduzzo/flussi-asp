@@ -2,7 +2,7 @@
 
 /** @var yii\web\View $this */
 
-$this->title = Yii::$app->name;
+use yii\helpers\Url;$this->title = Yii::$app->name;
 ?>
 <div class="site-index">
 
@@ -19,8 +19,8 @@ $this->title = Yii::$app->name;
 
                 <p>Assegnazione PIC e invio PAI in convenzionamento</p>
 
-                <a class="btn btn-outline-secondary" href="/siad/index">Nuova PIC</a>
-                <a class="btn btn-outline-secondary" href="/siad/cerca">Cerca</a>
+                <a class="btn btn-outline-secondary" href="<?= Url::to(['/siad/index']); ?>">Nuova PIC</a>
+                <a class="btn btn-outline-secondary" href="<?= Url::to(['/siad/cerca']); ?>">Cerca</a>
             </div>
             <div class="col-lg-4 mb-3">
                 <!--<h2>Heading</h2>
