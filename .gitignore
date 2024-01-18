@@ -37,3 +37,4 @@ tests/_support/_generated
 
 /uploads/*
 /web/assets/*
+/config/db.php
