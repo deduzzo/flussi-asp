@@ -101,17 +101,19 @@ class AdiPic extends \yii\db\ActiveRecord
     {
         $out = Json::decode($this->piano_terapeutico);
         $outString = "";
-        foreach ($out as $intervento) {
-            $interventoSplitted = explode("\t", $intervento);
-            for($i=0; $i<count($interventoSplitted); $i++) {
-                if ($i === 0)
-                    $outString .= "DA/A: ".str_replace(" ","-",$interventoSplitted[$i]);
-                else if ($i === count($interventoSplitted) -1)
-                    $outString .= " - FREQUENZA: $interventoSplitted[$i]";
-                else
-                    $outString .= " - ".$interventoSplitted[$i];
+        if ($out) {
+            foreach ($out as $intervento) {
+                $interventoSplitted = explode("\t", $intervento);
+                for ($i = 0; $i < count($interventoSplitted); $i++) {
+                    if ($i === 0)
+                        $outString .= "DA/A: " . str_replace(" ", "-", $interventoSplitted[$i]);
+                    else if ($i === count($interventoSplitted) - 1)
+                        $outString .= " - FREQUENZA: $interventoSplitted[$i]";
+                    else
+                        $outString .= " - " . $interventoSplitted[$i];
+                }
+                $outString .= "\n";
             }
-            $outString .= "\n";
         }
         return $outString;
     }
