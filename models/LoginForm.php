@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\models\enums\TipologiaLogin;
 use Yii;
 use yii\base\Model;
 
@@ -16,6 +17,7 @@ class LoginForm extends Model
     public $username;
     public $password;
     public $rememberMe = true;
+    public $tipo = TipologiaLogin::DOMINIO;
 
     private $_user = false;
 
@@ -26,10 +28,11 @@ class LoginForm extends Model
     public function rules()
     {
         return [
-            // username and password are both required
+            // username and password one of them is required
             [['username', 'password'], 'required'],
             // rememberMe must be a boolean value
             ['rememberMe', 'boolean'],
+            ['tipo', 'string'],
             // password is validated by validatePassword()
             ['password', 'validatePassword'],
         ];
@@ -45,11 +48,13 @@ class LoginForm extends Model
     public function validatePassword($attribute, $params)
     {
         if (!$this->hasErrors()) {
-            $user = $this->getUser();
+            // $user = $this->getUser();
+            $user = User::findByUsernameAndPassword($this->username, $this->password,$this->tipo);
 
-            if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Accoppiata username/password non valida.');
-            }
+            if (!$user)
+                $this->addError($attribute, 'Utente non trovato '.($this->tipo == TipologiaLogin::DOMINIO ? 'nel dominio' : 'nel database'));
+            else
+                $this->_user = $user;
         }
     }
 

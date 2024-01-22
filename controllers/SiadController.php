@@ -21,10 +21,10 @@ class SiadController extends \yii\web\Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['index', 'scelta-ditta', 'report', 'cerca'],
+                'only' => ['index', 'scelta-ditta', 'report', 'cerca', 'nuova'],
                 'rules' => [
                     [
-                        'actions' => ['index', 'scelta-ditta', 'report', 'cerca'],
+                        'actions' => ['index', 'scelta-ditta', 'report', 'cerca','nuova'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -39,7 +39,7 @@ class SiadController extends \yii\web\Controller
         ];
     }
 
-    public function actionIndex()
+    public function actionNuova()
     {
         $model = new FileUpload();
         if (Yii::$app->request->isPost) {
@@ -76,7 +76,7 @@ class SiadController extends \yii\web\Controller
             }
         }
 
-        return $this->render('index', [
+        return $this->render('nuova', [
             'model' => $model,
         ]);
 

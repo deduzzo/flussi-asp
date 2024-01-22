@@ -5,6 +5,7 @@
 
 /** @var app\models\LoginForm $model */
 
+use app\models\enums\TipologiaLogin;
 use yii\bootstrap5\ActiveForm;
 use yii\bootstrap5\Html;
 
@@ -14,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="site-login">
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>Inserire i dati d'accesso</p>
+    <p>Inserire i dati d'accesso del dominio</p>
 
     <div class="row">
         <div class="col-lg-5">
@@ -33,8 +34,22 @@ $this->params['breadcrumbs'][] = $this->title;
 
             <?= $form->field($model, 'password')->passwordInput() ?>
 
+            <!-- Radio select for $model->tipo, values of array $list -->
+            <?php
+            echo $form->field($model, 'tipo')->radioList(TipologiaLogin::$list, [
+                'item' => function ($index, $label, $name, $checked, $value) {
+                    $return = '<div class="form-check form-check-inline">'; // Usa 'form-check-inline' per allineare i radio buttons
+                    $return .= '<input type="radio" class="form-check-input" name="' . $name . '" value="' . $value . '" id="' . $value . '" ' . ($checked ? 'checked' : '') . '>';
+                    $return .= '<label class="form-check-label" for="' . $value . '">' . $label . '</label>';
+                    $return .= '</div>';
+                    return $return;
+                }
+            ])->label(false);
+            ?>
+
+
             <?= $form->field($model, 'rememberMe')->checkbox([
-                'template' => "<div class=\"custom-control custom-checkbox\">{input} {label}</div>\n<div class=\"col-lg-8\">{error}</div>",
+                'template' => "<div class=\"custom-control custom-checkbox\">{input} Ricordami</div>\n<div class=\"col-lg-8\">{error}</div>",
             ]) ?>
 
             <div class="form-group">

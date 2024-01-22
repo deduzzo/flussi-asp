@@ -21,7 +21,9 @@
         "smalot/pdfparser": "^2.8",
         "kartik-v/yii2-widget-fileinput": "dev-master",
         "asika/pdf2text": "^1.0",
-        "nesbot/carbon": "^2.72"
+        "nesbot/carbon": "^2.72",
+        "yii2mod/yii2-enum": "*",
+        "ext-ldap": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

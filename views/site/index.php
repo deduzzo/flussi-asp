@@ -19,7 +19,7 @@ use yii\helpers\Url;$this->title = Yii::$app->name;
 
                 <p>Assegnazione PIC e invio PAI in convenzionamento</p>
 
-                <a class="btn btn-outline-secondary" href="<?= Url::to(['/siad/index']); ?>">Nuova PIC</a>
+                <a class="btn btn-outline-secondary" href="<?= Url::to(['/siad/nuova']); ?>">Nuova PIC</a>
                 <a class="btn btn-outline-secondary" href="<?= Url::to(['/siad/cerca']); ?>">Cerca</a>
             </div>
             <div class="col-lg-4 mb-3">
