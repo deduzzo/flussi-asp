@@ -10,11 +10,13 @@ class FileUpload extends Model
      * @var UploadedFile
      */
     public $file;
+    public $nuovo = false;
 
     public function rules()
     {
         return [
-            [['file'], 'file', 'skipOnEmpty' => false, 'extensions' => 'pdf'],
+            [['file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf'],
+            [['nuovo'], 'boolean'],
         ];
     }
 }
