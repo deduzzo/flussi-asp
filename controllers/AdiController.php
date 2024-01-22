@@ -1,0 +1,208 @@
+<?php
+
+namespace app\controllers;
+
+use app\models\AdiPic;
+use app\models\FileUpload;
+use app\models\utils\Utils;
+use Carbon\Carbon;
+use Mpdf\Mpdf;
+use PhpParser\Node\Expr\Cast\Object_;
+use TCPDF;
+use Yii;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
+use yii\helpers\Json;
+use yii\web\UploadedFile;
+
+class AdiController extends \yii\web\Controller
+{
+
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'only' => ['index', 'scelta-ditta', 'report', 'cerca', 'nuova'],
+                'rules' => [
+                    [
+                        'actions' => ['index', 'scelta-ditta', 'report', 'cerca', 'nuova'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'logout' => ['post'],
+                ],
+            ],
+        ];
+    }
+
+    public function actionNuova()
+    {
+        $model = new FileUpload();
+        if ($this->request->isPost) {
+            $newPic = new AdiPic();
+            if (!array_key_exists('nuovo', $this->request->post())) {
+                $model->file = UploadedFile::getInstance($model, 'file');
+                // if !file
+                if ($model->file === null) {
+                    Yii::$app->session->setFlash('error', 'Nessun file caricato, importare un file o creare un nuovo PAI da zero');
+                    return $this->render('nuova', [
+                        'model' => $model,
+                    ]);
+                }
+                if ($model->validate()) {
+                    if (!is_dir(Yii::$app->params['uploadPath']))
+                        mkdir(Yii::$app->params['uploadPath'], 0777, true);
+                    $filePath = Yii::$app->params['uploadPath'] . $model->file->baseName . '.' . $model->file->extension;
+                    $model->file->saveAs($filePath);
+                    $fileHash = hash_file('md5', $filePath);
+                    $newFilePath = Yii::$app->params['uploadPath'] . $fileHash . '.' . $model->file->extension;
+                    rename($filePath, $newFilePath);
+                    try {
+                        $dati = Utils::ottieniDatiPICfromPDF($newFilePath);
+                        $newPic = new AdiPic();
+                        $newPic->cartella_aster = $dati['cartellaAster'];
+                        $newPic->cf = $dati['cf'];
+                        $newPic->data_pic = Carbon::createFromFormat('d/m/Y', $dati['data'])->format('Y-m-d');
+                        $newPic->cognome = $dati['cognome'];
+                        $newPic->nome = $dati['nome'];
+                        $newPic->dati_nascita = $dati['nascita'];
+                        $newPic->dati_residenza = $dati['residenza'];
+                        $newPic->dati_domicilio = $dati['domicilio'];
+                        $newPic->recapiti = $dati['telefono'];
+                        $newPic->medico_curante = $dati['medicoCurante'];
+                        $newPic->medico_prescrittore = $dati['medicoPrescrittore'];
+                        $newPic->diagnosi = $dati['diagnosiNote'];
+                        $newPic->piano_terapeutico = Json::encode($dati['interventi']);
+                        $newPic->nome_file = $fileHash . '.' . $model->file->extension;
+                        $newPic->data_ora_invio = date('Y-m-d H:i:s');
+                        $newPic->distretto = $dati['distretto'];
+                    } catch (\Exception $e) {
+                        Yii::$app->session->setFlash('error', 'Errore nel reperire i dati dal file caricato');
+                        return $this->render('nuova', [
+                            'model' => $model,
+                        ]);
+                    }
+                }
+            }
+            return $this->render('pic', [
+                'pic' => $newPic,
+            ]);
+        }
+
+        return $this->render('nuova', [
+            'model' => $model,
+        ]);
+
+    }
+
+    public function actionReport($id = null)
+    {
+        if ($id) {
+            $pic = AdiPic::findOne($id);
+            $mpdf = new Mpdf();
+
+            $html = <<<EOF
+<!DOCTYPE html>
+<html lang="it" xmlns="http://www.w3.org/1999/html">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<div class="container">
+  <table style="border: 0">
+  <tr>
+    <td rowspan="2" colspan="6">
+        <img src="/static/images/asp-messina.jpg" alt="ASP Messina" class="logo">
+    </td>
+    <td style="text-align: center; padding-top: 40px" colspan="6">
+      <p>SPORTELLO UNICO DI ACCESSO ALLE CURE DOMICILIARI</p>
+      <p class="underline">$pic->distretto</p>
+    </td>
+  </tr>
+  <tr>
+    <td style="text-align: center" colspan="6">
+        <h2>Piano Assistenza Individualizzato</h2>
+    </td>
+  </tr>
+  <tr>
+        <td colspan="6"><b>Assistito</b></td><td colspan="3">Nr. Cartella:</td><td colspan="3"><b>$pic->cartella_aster</b></td>
+    </tr>
+     <tr style="padding-top: 20px">
+        <td colspan="1"><b>Cognome</b></td>
+        <td colspan="3">$pic->cognome</b></td>
+        <td colspan="1"><b>Nome</td>
+        <td colspan="3">$pic->nome</td>
+        <td colspan="1"><b>Codice Fiscale</td>
+        <td colspan="3">$pic->cf</td>
+    </tr>
+    <tr>
+        <td colspan="1"><b>Data di nascita</b></td>
+        <td colspan="3">$pic->dati_nascita</td>
+        <td colspan="1"><b>Residenza</td>
+        <td colspan="3">$pic->dati_residenza</td>
+        <td colspan="1"><b>Domicilio</td>
+        <td colspan="3">$pic->dati_domicilio</td>
+    </tr>
+
+    </table>
+    
+
+  <div class="footer">
+    <p>Data <span class="underline">16/01/2024</span></p>
+    <p>Firma del responsabile U.V.D.</p>
+  </div>
+</div>
+</body>
+</html>
+EOF;
+
+            $mpdf->WriteHTML($html);
+            $mpdf->Output();
+        } else
+            return $this->render('cerca', [
+            ]);
+    }
+
+    public function actionSceltaDitta()
+    {
+        $pic = new AdiPic();
+        $pic->scenario = AdiPic::SCENARIO_SCELTA_DITTA;
+        if (Yii::$app->request->isPost) {
+            $pic->load(Yii::$app->request->post());
+            if ($pic->attributes['ditta_scelta'] === null) {
+                return $this->render('scelta-ditta', ['pic' => $pic]);
+            } else {
+                // save
+                if ($pic->save()) {
+                    Yii::$app->session->setFlash('success', 'Dati salvati correttamente');
+                } else {
+                    Yii::$app->session->setFlash('error', 'Errore nel salvataggio dei dati');
+                    return $this->render('scelta-ditta', ['pic' => $pic]);
+                }
+                return $this->redirect(['report', 'id' => $pic->id]);
+            }
+        }
+        return $this->render('index');
+    }
+
+    public function actionCerca($cf = null)
+    {
+        $pai = [];
+        if ($cf) {
+            $pai = AdiPic::find()->where(['cf' => $cf])->all();
+            if (count($pai) == 0) {
+                Yii::$app->session->setFlash('error', 'Nessun PIC trovato con il codice fiscale inserito');
+            }
+        }
+        return $this->render('cerca', [
+            'pai' => $pai,
+        ]);
+    }
+}

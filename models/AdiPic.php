@@ -50,7 +50,7 @@ class AdiPic extends \yii\db\ActiveRecord
     {
         return [
             [['data_pic', 'data_ora_invio'], 'safe'],
-            [['cf'], 'required'],
+            [['cf','nome','cognome','dati_nascita','dati_residenza','recapiti','diagnosi','piano_terapeutico'], 'required'],
             [['piano_terapeutico'], 'string'],
             [['ditta_scelta'], 'integer'],
             [['distretto', 'cartella_aster', 'cf', 'cognome', 'nome', 'dati_nascita', 'dati_domicilio', 'recapiti', 'medico_curante', 'medico_prescrittore', 'nome_file'], 'string', 'max' => 100],
@@ -80,7 +80,7 @@ class AdiPic extends \yii\db\ActiveRecord
             'medico_curante' => 'Medico Curante',
             'medico_prescrittore' => 'Medico Prescrittore',
             'diagnosi' => 'Diagnosi',
-            'piano_terapeutico' => 'Piano Terapeutico',
+            'piano_terapeutico' => 'Piano Terapeutico (da/a - intervento - frequenza)',
             'nome_file' => 'Nome File',
             'data_ora_invio' => 'Data Ora Invio',
             'ditta_scelta' => 'Ditta Scelta',

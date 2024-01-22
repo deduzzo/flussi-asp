@@ -23,7 +23,8 @@
         "asika/pdf2text": "^1.0",
         "nesbot/carbon": "^2.72",
         "yii2mod/yii2-enum": "*",
-        "ext-ldap": "*"
+        "ext-ldap": "*",
+        "mpdf/mpdf": "^8.2"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

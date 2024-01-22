@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div>
     <?php $form = ActiveForm::begin([
-        'action' => Url::to(['/siad/scelta-ditta']), // Imposta l'azione del form
+        'action' => Url::to(['/adi/scelta-ditta']), // Imposta l'azione del form
         // Altri parametri del form, se necessari...
     ]); ?>
 

@@ -13,7 +13,7 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
     public $accessToken;
 
     public static $utentiDefault = [
-        "siad" => "siad",
+        "adi" => "adi",
     ];
 
 

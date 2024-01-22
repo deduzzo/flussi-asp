@@ -15,12 +15,12 @@ use yii\helpers\Url;$this->title = Yii::$app->name;
 
         <div class="row">
             <div class="col-lg-4 mb-3">
-                <h2>ADI - SIAD</h2>
+                <h2>ADI - Assistenza Domiciliare Integrata</h2>
 
-                <p>Assegnazione PIC e invio PAI in convenzionamento</p>
+                <p>Creazione PIC e invio PAI in regime di convenzionamento</p>
 
-                <a class="btn btn-outline-secondary" href="<?= Url::to(['/siad/nuova']); ?>">Nuova PIC</a>
-                <a class="btn btn-outline-secondary" href="<?= Url::to(['/siad/cerca']); ?>">Cerca</a>
+                <a class="btn btn-outline-secondary" href="<?= Url::to(['/adi/nuova']); ?>">Nuova PIC</a>
+                <a class="btn btn-outline-secondary" href="<?= Url::to(['/adi/cerca']); ?>">Cerca</a>
             </div>
             <div class="col-lg-4 mb-3">
                 <!--<h2>Heading</h2>

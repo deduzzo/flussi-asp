@@ -8,7 +8,7 @@ use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $model app\models\FileUpload */
 
-$this->title = 'ADI - SIAD';
+$this->title = 'ADI - Assistenza domiciliare integrata';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>Seleziona l'allegato PDF del PAI da gestire, oppure creane uno nuovo:</p>
 
     <?php $form = ActiveForm::begin([
-        'action' => Url::to(['/siad/nuova']), // Sostituisci con il tuo controller e la tua action
+        'action' => Url::to(['/adi/nuova']), // Sostituisci con il tuo controller e la tua action
         'options' => ['enctype' => 'multipart/form-data']
     ]);
 

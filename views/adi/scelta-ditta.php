@@ -1,5 +1,6 @@
 <?php
 
+use app\models\DitteAccreditate;
 use kartik\file\FileInput;
 use yii\bootstrap5\ActiveForm;
 use yii\helpers\Html;
@@ -23,9 +24,16 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?php
         // optionselect for ditta
-        $ditta = \app\models\DitteAccreditate::find()->all();
-        $items = \yii\helpers\ArrayHelper::map($ditta, 'id', 'denominazione');
-        echo $form->field($pic, 'ditta_scelta')->dropDownList($items, ['prompt' => 'Seleziona la ditta']);
+        $ditta = DitteAccreditate::find()->where(['attiva' => true])->all();
+        $items = [];
+        foreach ($ditta as $d) {
+            /* @var $d \app\models\DitteAccreditate */
+            $items[$d->id] = $d->getDescrDitta();
+        }
+        // div class success
+        echo "<div class='alert alert-success' role='alert'>";
+        echo $form->field($pic, 'ditta_scelta')->dropDownList($items, ['prompt' => 'Seleziona la ditta', 'class' => 'form-control'])->label("Ditta scelta dall'utente:", ['style' => 'font-weight: bold;']);
+        echo "</div>";
     ?>
     <?= $form->field($pic, 'nome')->hiddenInput()->label(false) ?>
     <?= $form->field($pic, 'cognome')->hiddenInput()->label(false) ?>
