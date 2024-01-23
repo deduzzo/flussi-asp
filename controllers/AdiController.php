@@ -107,62 +107,89 @@ class AdiController extends \yii\web\Controller
     private function generaPDFPic($pic)
     {
         $mpdf = new Mpdf();
+        $terapia =  str_replace("\r\n", "<br />", $pic->piano_terapeutico);
         $alias = Yii::getAlias('@web');
-        $html = <<<EOF
-                <!DOCTYPE html>
-                <html lang="it" xmlns="http://www.w3.org/1999/html">
+        $html = "<!DOCTYPE html>
+                <html lang='it' xmlns='http://www.w3.org/1999/html'>
                 <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <meta charset='UTF-8'>
+                <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                <style>
+                  td {
+                    text-align: left; /* Aligns text to the left in all table cells */
+                  }
+                </style>
                 </head>
                 <body>
-                <div class="container">
-                  <table style="border: 0">
+                <div class='container'>
+                  <table style='border: 0;'>
                   <tr>
-                    <td rowspan="2" colspan="6">
-                        <img src="$alias/static/images/asp-messina.jpg" alt="ASP Messina" class="logo">
+                    <td rowspan='2' colspan='6'>
+                        <img src='$alias/static/images/asp-messina.jpg' alt='ASP Messina' class='logo'>
                     </td>
-                    <td style="text-align: center; padding-top: 40px" colspan="6">
+                    <td style='text-align: center; padding-top: 40px' colspan='6'>
                       <p>SPORTELLO UNICO DI ACCESSO ALLE CURE DOMICILIARI</p>
-                      <p class="underline">$pic->distretto</p>
+                      <p class='underline' style='padding-top: 5px'><b>$pic->distretto</b></p>
                     </td>
                   </tr>
                   <tr>
-                    <td style="text-align: center" colspan="6">
+                    <td style='text-align: center' colspan='6'>
                         <h2>Piano Assistenza Individualizzato</h2>
                     </td>
                   </tr>
                   <tr>
-                        <td colspan="6"><b>Assistito</b></td><td colspan="3">Nr. Cartella:</td><td colspan="3"><b>$pic->cartella_aster</b></td>
+                    <td colspan='1' style='padding-top: 20px'><b>Data</b></td>
+                    <td colspan='5' style='padding-top: 20px'>".Yii::$app->formatter->asDate($pic->data_pic)."</td>
+                    <td colspan='1' style='padding-top: 20px'><b>Cartella<br /> ASTER</b></td>
+                    <td colspan='5' style='padding-top: 20px'>$pic->cartella_aster</td>
+                  </tr>
+                  <tr>
+                    <td colspan='1' style='padding-top: 20px'><b>Codice<br /> Fiscale</b></td>
+                    <td colspan='11' style='padding-top: 20px'>$pic->cf</td>
                     </tr>
-                     <tr style="padding-top: 20px">
-                        <td colspan="1"><b>Cognome</b></td>
-                        <td colspan="3">$pic->cognome</b></td>
-                        <td colspan="1"><b>Nome</td>
-                        <td colspan="3">$pic->nome</td>
-                        <td colspan="1"><b>Codice Fiscale</td>
-                        <td colspan="3">$pic->cf</td>
-                    </tr>
+                  <tr>
+                    <td colspan='1' style='padding-top: 20px'><b>Cognome</b></td>
+                    <td colspan='5' style='padding-top: 20px'>$pic->cognome</td>
+                    <td colspan='1' style='padding-top: 20px'><b>Nome</b></td>
+                    <td colspan='5' style='padding-top: 20px'>$pic->nome</td>
+                  </tr>
+                  <tr>
+                    <td colspan='1' style='padding-top: 20px'><b>Nato a</b></td>
+                    <td colspan='5' style='padding-top: 20px'>$pic->dati_nascita</td>
+                    <td colspan='1' style='padding-top: 20px'><b>Residenza</b></td>
+                    <td colspan='5' style='padding-top: 20px'>$pic->dati_residenza</td>
+                  </tr>
+                  <tr>
+                    <td colspan='1' style='padding-top: 20px'><b>Domiciliato a</b></td>
+                    <td colspan='5' style='padding-top: 20px'>$pic->dati_domicilio</td>
+                    <td colspan='1' style='padding-top: 20px'><b>Recapiti</b></td>
+                    <td colspan='5' style='padding-top: 20px'>$pic->recapiti</td>
+                  </tr>
+                  <tr>
+                    <td colspan='1' style='padding-top: 20px'><b>Medico<br /> curante</b></td>
+                    <td colspan='5' style='padding-top: 20px'>$pic->medico_curante</td>
+                    <td colspan='1' style='padding-top: 20px'><b>Medico <br />prescrittore</b></td>
+                    <td colspan='5' style='padding-top: 20px'>$pic->medico_prescrittore</td>
+                  </tr>
+                  <tr>
+                    <td colspan='1' style='padding-top: 20px'><b>Diagnosi</b></td>
+                    <td colspan='11' style='padding-top: 20px'>$pic->diagnosi</td>
+                  </tr>
+                  <tr>
+                    <td colspan='12' style='padding-top: 20px'><b>Piano terapeutico</b></td></tr>
                     <tr>
-                        <td colspan="1"><b>Data di nascita</b></td>
-                        <td colspan="3">$pic->dati_nascita</td>
-                        <td colspan="1"><b>Residenza</td>
-                        <td colspan="3">$pic->dati_residenza</td>
-                        <td colspan="1"><b>Domicilio</td>
-                        <td colspan="3">$pic->dati_domicilio</td>
-                    </tr>
-                
-                    </table>
-                    
-                
-                  <div class="footer">
-                    <p>Data <span class="underline">16/01/2024</span></p>
-                    <p>Firma del responsabile U.V.D.</p>
+                    <td colspan='12' style='padding-top: 5px'>$terapia</td>
+                  </tr>
+                  </table>
+                  <div class='footer' style='padding-top: 50px'>
+                    <p>Data <span class='underline'>".Yii::$app->formatter->asDate(Carbon::now())."</span></p>
+                    <p>Firma del responsabile U.V.D.</p><br />
+                    <p>__________________________________</p>
                   </div>
                 </div>
                 </body>
-                </html>
-                EOF;
+                </html>";
+
         $mpdf->WriteHTML($html);
         return $mpdf;
     }
@@ -179,7 +206,7 @@ class AdiController extends \yii\web\Controller
         $pdf->Output(Yii::$app->params['tempPath'] . "$random.pdf", 'F');
         try {
             $message = Yii::$app->mailer->compose()->setHtmlBody(
-                "In data " . Yii::$app->formatter->asDate($pic->data_ora_invio) . " è stato a voi assegnato l'assistito:<br /><br /> $pic->cognome $pic->nome con CF $pic->cf. <br /> In allegato il PAI in oggetto.<br />Cordiali saluti<br /><br />ASP 5 Messina")
+                "In data " . Yii::$app->formatter->asDate($pic->data_pic) . " è stato a voi assegnato l'assistito:<br /><br /> $pic->cognome $pic->nome con CF $pic->cf. <br /> In allegato il PAI in oggetto.<br />Cordiali saluti<br /><br />ASP 5 Messina")
                 ->setFrom('roberto.dedomenico@asp.messina.it')
                 ->setTo($test ? 'roberto.dedomenico@asp.messina.it' : $pic->dittaScelta->email)
                 ->setSubject('ASP 5 Messina - Nuovo PAI assistito ' . $pic->cf)->attach(Yii::$app->params['tempPath'] . "$random.pdf", ['fileName' => "PAI-$pic->cf.pdf"])->send();

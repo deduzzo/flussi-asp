@@ -38,6 +38,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="col-md-2">
                     <?= $form->field($pic, 'cartella_aster')->textInput(['maxlength' => true]) ?>
                 </div>
+                <div class="col-md-4">
+                    <?= $form->field($pic, 'id_utente')->textInput(['maxlength' => true]) ?>
+                </div>
             </div>
         </fieldset>
         <fieldset>
