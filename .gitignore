@@ -39,3 +39,4 @@ tests/_support/_generated
 /web/assets/*
 /web/index.php
 /config/db.php
+/config/mail.php

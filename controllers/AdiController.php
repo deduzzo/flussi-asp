@@ -108,61 +108,60 @@ class AdiController extends \yii\web\Controller
             $mpdf = new Mpdf();
 
             $html = <<<EOF
-<!DOCTYPE html>
-<html lang="it" xmlns="http://www.w3.org/1999/html">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body>
-<div class="container">
-  <table style="border: 0">
-  <tr>
-    <td rowspan="2" colspan="6">
-        <img src="/static/images/asp-messina.jpg" alt="ASP Messina" class="logo">
-    </td>
-    <td style="text-align: center; padding-top: 40px" colspan="6">
-      <p>SPORTELLO UNICO DI ACCESSO ALLE CURE DOMICILIARI</p>
-      <p class="underline">$pic->distretto</p>
-    </td>
-  </tr>
-  <tr>
-    <td style="text-align: center" colspan="6">
-        <h2>Piano Assistenza Individualizzato</h2>
-    </td>
-  </tr>
-  <tr>
-        <td colspan="6"><b>Assistito</b></td><td colspan="3">Nr. Cartella:</td><td colspan="3"><b>$pic->cartella_aster</b></td>
-    </tr>
-     <tr style="padding-top: 20px">
-        <td colspan="1"><b>Cognome</b></td>
-        <td colspan="3">$pic->cognome</b></td>
-        <td colspan="1"><b>Nome</td>
-        <td colspan="3">$pic->nome</td>
-        <td colspan="1"><b>Codice Fiscale</td>
-        <td colspan="3">$pic->cf</td>
-    </tr>
-    <tr>
-        <td colspan="1"><b>Data di nascita</b></td>
-        <td colspan="3">$pic->dati_nascita</td>
-        <td colspan="1"><b>Residenza</td>
-        <td colspan="3">$pic->dati_residenza</td>
-        <td colspan="1"><b>Domicilio</td>
-        <td colspan="3">$pic->dati_domicilio</td>
-    </tr>
-
-    </table>
-    
-
-  <div class="footer">
-    <p>Data <span class="underline">16/01/2024</span></p>
-    <p>Firma del responsabile U.V.D.</p>
-  </div>
-</div>
-</body>
-</html>
-EOF;
-
+            <!DOCTYPE html>
+            <html lang="it" xmlns="http://www.w3.org/1999/html">
+            <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            </head>
+            <body>
+            <div class="container">
+              <table style="border: 0">
+              <tr>
+                <td rowspan="2" colspan="6">
+                    <img src="/static/images/asp-messina.jpg" alt="ASP Messina" class="logo">
+                </td>
+                <td style="text-align: center; padding-top: 40px" colspan="6">
+                  <p>SPORTELLO UNICO DI ACCESSO ALLE CURE DOMICILIARI</p>
+                  <p class="underline">$pic->distretto</p>
+                </td>
+              </tr>
+              <tr>
+                <td style="text-align: center" colspan="6">
+                    <h2>Piano Assistenza Individualizzato</h2>
+                </td>
+              </tr>
+              <tr>
+                    <td colspan="6"><b>Assistito</b></td><td colspan="3">Nr. Cartella:</td><td colspan="3"><b>$pic->cartella_aster</b></td>
+                </tr>
+                 <tr style="padding-top: 20px">
+                    <td colspan="1"><b>Cognome</b></td>
+                    <td colspan="3">$pic->cognome</b></td>
+                    <td colspan="1"><b>Nome</td>
+                    <td colspan="3">$pic->nome</td>
+                    <td colspan="1"><b>Codice Fiscale</td>
+                    <td colspan="3">$pic->cf</td>
+                </tr>
+                <tr>
+                    <td colspan="1"><b>Data di nascita</b></td>
+                    <td colspan="3">$pic->dati_nascita</td>
+                    <td colspan="1"><b>Residenza</td>
+                    <td colspan="3">$pic->dati_residenza</td>
+                    <td colspan="1"><b>Domicilio</td>
+                    <td colspan="3">$pic->dati_domicilio</td>
+                </tr>
+            
+                </table>
+                
+            
+              <div class="footer">
+                <p>Data <span class="underline">16/01/2024</span></p>
+                <p>Firma del responsabile U.V.D.</p>
+              </div>
+            </div>
+            </body>
+            </html>
+            EOF;
             $mpdf->WriteHTML($html);
             $mpdf->Output();
         } else

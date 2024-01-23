@@ -97,10 +97,4 @@ class SiteController extends Controller
 
         return $this->goHome();
     }
-
-    public function actionTest() {
-        $fileName = 'D:\DATI\Download\report(1).pdf';
-       $dati = Utils::ottieniDatiPICfromPDF($fileName);
-       print_r($dati);
-    }
 }
