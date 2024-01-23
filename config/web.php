@@ -2,6 +2,7 @@
 
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
+$mail = require __DIR__ . '/mail.php';
 
 $config = [
     'id' => 'basic',
@@ -30,15 +31,11 @@ $config = [
         ],
         'formatter' => [
             'class' => 'yii\i18n\Formatter',
-            'dateFormat' => 'php:Y-m-d',
-            'datetimeFormat' => 'php:Y-m-d H:i:s',
+            'dateFormat' => 'php:d/m/Y',
+            'datetimeFormat' => 'php:d/m/Y H:i:s',
+            'timeFormat' => 'php:H:i:s',
         ],
-        'mailer' => [
-            'class' => \yii\symfonymailer\Mailer::class,
-            'viewPath' => '@app/mail',
-            // send all mails to a file by default.
-            'useFileTransport' => true,
-        ],
+        'mailer' => $mail,
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [

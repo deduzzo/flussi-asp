@@ -14,19 +14,22 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
 <div>
+    <div class="text-center">
+        <?= Html::beginForm() ?>
+            <?php if ($pic) Html::hiddenInput('id', $pic->id) ?>
+            <?= Html::submitButton('Genera Report PDF', ['class' => 'btn btn-success', 'style' => 'margin-right:30px', 'name' => 'report', 'value' => 'report']) ?>
+            <?= Html::submitButton('Invia PAI via mail alla ditta', ['class' => 'btn btn-warning', 'name' => 'notifica', 'value' => 'notifica']) ?>
+            <?= "<div style='margin-top:10px'>Data invio ultima mail alla ditta: <span><b>" . ($pic->data_ora_invio !== null ? Yii::$app->formatter->asDatetime($pic->data_ora_invio) : 'Non ancora inviato') . "</b></span></div>" ?>
+        <?= Html::endForm() ?>
+    </div>
     <?php $form = ActiveForm::begin(); ?>
-
-
     <?php
     // optionselect for ditta
     $ditta = \app\models\DitteAccreditate::find()->all();
     $items = \yii\helpers\ArrayHelper::map($ditta, 'id', 'denominazione');
-    echo $form->field($pic, 'ditta_scelta')->dropDownList($items, ['prompt' => 'Seleziona la ditta','disabled' => true]);
+    echo $form->field($pic, 'ditta_scelta')->dropDownList($items, ['prompt' => 'Seleziona la ditta', 'disabled' => true]);
     ?>
     <div class="form-group">
-        <div class="text-center">
-            <?= Html::submitButton('Genera Report', ['class' => 'btn btn-success']) ?>
-        </div>
         <fieldset>
             <legend>Sommario</legend>
             <div class="row">

@@ -2,10 +2,12 @@
 
 namespace app\controllers;
 
+use app\models\utils\SymfonyMailerComponent;
 use app\models\AdiPic;
 use app\models\FileUpload;
 use app\models\utils\Utils;
 use Carbon\Carbon;
+use Exception;
 use Mpdf\Mpdf;
 use PhpParser\Node\Expr\Cast\Object_;
 use TCPDF;
@@ -101,75 +103,110 @@ class AdiController extends \yii\web\Controller
 
     }
 
-    public function actionReport($id = null)
+    public function actionReport($id = null, $inviaReport = false)
     {
         if ($id) {
             $pic = AdiPic::findOne($id);
-            $mpdf = new Mpdf();
+            if ($this->request->isPost || $inviaReport) {
+                if ($this->request->isPost)
+                    $inviaReport = false;
 
-            $html = <<<EOF
-            <!DOCTYPE html>
-            <html lang="it" xmlns="http://www.w3.org/1999/html">
-            <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            </head>
-            <body>
-            <div class="container">
-              <table style="border: 0">
-              <tr>
-                <td rowspan="2" colspan="6">
-                    <img src="/static/images/asp-messina.jpg" alt="ASP Messina" class="logo">
-                </td>
-                <td style="text-align: center; padding-top: 40px" colspan="6">
-                  <p>SPORTELLO UNICO DI ACCESSO ALLE CURE DOMICILIARI</p>
-                  <p class="underline">$pic->distretto</p>
-                </td>
-              </tr>
-              <tr>
-                <td style="text-align: center" colspan="6">
-                    <h2>Piano Assistenza Individualizzato</h2>
-                </td>
-              </tr>
-              <tr>
-                    <td colspan="6"><b>Assistito</b></td><td colspan="3">Nr. Cartella:</td><td colspan="3"><b>$pic->cartella_aster</b></td>
-                </tr>
-                 <tr style="padding-top: 20px">
-                    <td colspan="1"><b>Cognome</b></td>
-                    <td colspan="3">$pic->cognome</b></td>
-                    <td colspan="1"><b>Nome</td>
-                    <td colspan="3">$pic->nome</td>
-                    <td colspan="1"><b>Codice Fiscale</td>
-                    <td colspan="3">$pic->cf</td>
-                </tr>
-                <tr>
-                    <td colspan="1"><b>Data di nascita</b></td>
-                    <td colspan="3">$pic->dati_nascita</td>
-                    <td colspan="1"><b>Residenza</td>
-                    <td colspan="3">$pic->dati_residenza</td>
-                    <td colspan="1"><b>Domicilio</td>
-                    <td colspan="3">$pic->dati_domicilio</td>
-                </tr>
-            
-                </table>
+                $mpdf = new Mpdf();
+                $html = <<<EOF
+                <!DOCTYPE html>
+                <html lang="it" xmlns="http://www.w3.org/1999/html">
+                <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                </head>
+                <body>
+                <div class="container">
+                  <table style="border: 0">
+                  <tr>
+                    <td rowspan="2" colspan="6">
+                        <img src="/static/images/asp-messina.jpg" alt="ASP Messina" class="logo">
+                    </td>
+                    <td style="text-align: center; padding-top: 40px" colspan="6">
+                      <p>SPORTELLO UNICO DI ACCESSO ALLE CURE DOMICILIARI</p>
+                      <p class="underline">$pic->distretto</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align: center" colspan="6">
+                        <h2>Piano Assistenza Individualizzato</h2>
+                    </td>
+                  </tr>
+                  <tr>
+                        <td colspan="6"><b>Assistito</b></td><td colspan="3">Nr. Cartella:</td><td colspan="3"><b>$pic->cartella_aster</b></td>
+                    </tr>
+                     <tr style="padding-top: 20px">
+                        <td colspan="1"><b>Cognome</b></td>
+                        <td colspan="3">$pic->cognome</b></td>
+                        <td colspan="1"><b>Nome</td>
+                        <td colspan="3">$pic->nome</td>
+                        <td colspan="1"><b>Codice Fiscale</td>
+                        <td colspan="3">$pic->cf</td>
+                    </tr>
+                    <tr>
+                        <td colspan="1"><b>Data di nascita</b></td>
+                        <td colspan="3">$pic->dati_nascita</td>
+                        <td colspan="1"><b>Residenza</td>
+                        <td colspan="3">$pic->dati_residenza</td>
+                        <td colspan="1"><b>Domicilio</td>
+                        <td colspan="3">$pic->dati_domicilio</td>
+                    </tr>
                 
-            
-              <div class="footer">
-                <p>Data <span class="underline">16/01/2024</span></p>
-                <p>Firma del responsabile U.V.D.</p>
-              </div>
-            </div>
-            </body>
-            </html>
-            EOF;
-            $mpdf->WriteHTML($html);
-            $mpdf->Output();
-        } else
-            return $this->render('cerca', [
+                    </table>
+                    
+                
+                  <div class="footer">
+                    <p>Data <span class="underline">16/01/2024</span></p>
+                    <p>Firma del responsabile U.V.D.</p>
+                  </div>
+                </div>
+                </body>
+                </html>
+                EOF;
+                $mpdf->WriteHTML($html);
+                if (array_key_exists('report', $this->request->post()))
+                    $mpdf->Output();
+                else if (array_key_exists('notifica', $this->request->post()) || $inviaReport) {
+                    // save file to temp folder
+                    $random = Yii::$app->security->generateRandomString(10);
+                    // create if not exist path Yii::$app->params['tempPath']
+                    if (!is_dir(Yii::$app->params['tempPath']))
+                        mkdir(Yii::$app->params['tempPath'], 0777, true);
+                    $mpdf->Output(Yii::$app->params['tempPath'] . "$random.pdf", 'F');
+                    try {
+                        $test = true;
+                        $message = Yii::$app->mailer->compose()->setHtmlBody(
+                            "In data " . Yii::$app->formatter->asDate($pic->data_ora_invio) . " è stato a voi assegnato l'assistito:<br /><br /> $pic->cognome $pic->nome con CF $pic->cf. <br /> In allegato il PAI in oggetto.<br />Cordiali saluti<br /><br />ASP 5 Messina")
+                            ->setFrom('roberto.dedomenico@asp.messina.it')
+                            ->setTo($test ? 'roberto.dedomenico@asp.messina.it' : $pic->dittaScelta->email)
+                            ->setSubject('ASP 5 Messina - Nuovo PAI assistito ' .$pic->cf)->attach(Yii::$app->params['tempPath'] . "$random.pdf", ['fileName' => "PAI-$pic->cf.pdf"])->send();
+                        if ($message) {
+                            $pic->data_ora_invio = date('Y-m-d H:i:s');
+                            Yii::$app->session->setFlash('success', "PAI inviato correttamente via mail a " . $pic->dittaScelta->denominazione);
+                            // remove temp file
+                            unlink(Yii::$app->params['tempPath'] . "$random.pdf");
+                            $pic->save();
+                        } else
+                            Yii::$app->session->setFlash('error', 'Errore nell\'invio dell\'email');
+                    } catch (Exception $e) {
+                        // Gestisci l'eccezione o registra l'errore
+                        Yii::$app->session->setFlash('error', 'Errore nell\'invio dell\'email');
+                    }
+                }
+            }
+            return $this->render('report', [
+                'pic' => $pic,
             ]);
+        } else
+            return $this->redirect(['cerca']);
     }
 
-    public function actionSceltaDitta()
+    public
+    function actionSceltaDitta()
     {
         $pic = new AdiPic();
         $pic->scenario = AdiPic::SCENARIO_SCELTA_DITTA;
@@ -185,13 +222,14 @@ class AdiController extends \yii\web\Controller
                     Yii::$app->session->setFlash('error', 'Errore nel salvataggio dei dati');
                     return $this->render('scelta-ditta', ['pic' => $pic]);
                 }
-                return $this->redirect(['report', 'id' => $pic->id]);
+                return $this->redirect(['report', 'id' => $pic->id, 'inviaReport' => true]);
             }
         }
         return $this->render('index');
     }
 
-    public function actionCerca($cf = null)
+    public
+    function actionCerca($cf = null)
     {
         $pai = [];
         if ($cf) {
