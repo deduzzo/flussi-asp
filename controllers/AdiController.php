@@ -180,6 +180,11 @@ class AdiController extends \yii\web\Controller
                     <tr>
                     <td colspan='12' style='padding-top: 5px'>$terapia</td>
                   </tr>
+                  <tr>
+                    <td colspan='12' style='padding-top: 20px'><b>DITTA PRESCELTA:</b></td></tr>
+                    <tr>
+                    <td colspan='12' style='padding-top: 5px'><h2>".$pic->dittaScelta->denominazione ."</h2></td>
+                  </tr>
                   </table>
                   <div class='footer' style='padding-top: 50px'>
                     <p>Data <span class='underline'>".Yii::$app->formatter->asDate(Carbon::now())."</span></p>
@@ -197,7 +202,7 @@ class AdiController extends \yii\web\Controller
     private function inviaPdfAllaDitta($pic)
     {
         $pdf = $this->generaPDFPic($pic);
-        $test = true;
+        $test = false;
         // save file to temp folder
         $random = Yii::$app->security->generateRandomString(10);
         // create if not exist path Yii::$app->params['tempPath']
