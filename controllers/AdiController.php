@@ -240,8 +240,10 @@ class AdiController extends \yii\web\Controller
                 if ($pic->save()) {
                     Yii::$app->session->setFlash('success', 'Dati salvati correttamente');
                     $out = $this->inviaPdfAllaDitta($pic);
-                    if ($out)
+                    if ($out) {
                         Yii::$app->session->setFlash('success', "Email alla ditta " . $pic->dittaScelta->denominazione . " inviata correttamente");
+                        return $this->redirect(['report', 'id' => $pic->id]);
+                    }
                     else
                         Yii::$app->session->setFlash('error', 'Errore nell\'invio dell\'email');
                 } else {
