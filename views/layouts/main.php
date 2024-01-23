@@ -71,7 +71,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     <div class="container">
         <div class="row text-muted">
             <div class="col-md-6 text-center text-md-start">&copy; ASP5 Messina <?= date('Y') ?></div>
-            <div class="col-md-6 text-center text-md-end">flussi_sanitari v.1.0</div>
+            <div class="col-md-6 text-center text-md-end">flussi_sanitari v.1.0.1</div>
         </div>
     </div>
 </footer>
