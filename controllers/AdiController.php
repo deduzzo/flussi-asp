@@ -84,6 +84,7 @@ class AdiController extends \yii\web\Controller
                         $newPic->nome_file = $fileHash . '.' . $model->file->extension;
                         $newPic->data_ora_invio = date('Y-m-d H:i:s');
                         $newPic->distretto = $dati['distretto'];
+                        $newPic->id_utente = Yii::$app->user->identity->username;
                     } catch (\Exception $e) {
                         Yii::$app->session->setFlash('error', 'Errore nel reperire i dati dal file caricato');
                         return $this->render('nuova', [
@@ -103,17 +104,11 @@ class AdiController extends \yii\web\Controller
 
     }
 
-    public function actionReport($id = null, $inviaReport = false)
+    private function generaPDFPic($pic)
     {
-        if ($id) {
-            $pic = AdiPic::findOne($id);
-            if ($this->request->isPost || $inviaReport) {
-                if ($this->request->isPost)
-                    $inviaReport = false;
-
-                $mpdf = new Mpdf();
-                $alias = Yii::getAlias('@web');
-                $html = <<<EOF
+        $mpdf = new Mpdf();
+        $alias = Yii::getAlias('@web');
+        $html = <<<EOF
                 <!DOCTYPE html>
                 <html lang="it" xmlns="http://www.w3.org/1999/html">
                 <head>
@@ -168,33 +163,58 @@ class AdiController extends \yii\web\Controller
                 </body>
                 </html>
                 EOF;
-                $mpdf->WriteHTML($html);
+        $mpdf->WriteHTML($html);
+        return $mpdf;
+    }
+
+    private function inviaPdfAllaDitta($pic)
+    {
+        $pdf = $this->generaPDFPic($pic);
+        $test = true;
+        // save file to temp folder
+        $random = Yii::$app->security->generateRandomString(10);
+        // create if not exist path Yii::$app->params['tempPath']
+        if (!is_dir(Yii::$app->params['tempPath']))
+            mkdir(Yii::$app->params['tempPath'], 0777, true);
+        $pdf->Output(Yii::$app->params['tempPath'] . "$random.pdf", 'F');
+        try {
+            $message = Yii::$app->mailer->compose()->setHtmlBody(
+                "In data " . Yii::$app->formatter->asDate($pic->data_ora_invio) . " è stato a voi assegnato l'assistito:<br /><br /> $pic->cognome $pic->nome con CF $pic->cf. <br /> In allegato il PAI in oggetto.<br />Cordiali saluti<br /><br />ASP 5 Messina")
+                ->setFrom('roberto.dedomenico@asp.messina.it')
+                ->setTo($test ? 'roberto.dedomenico@asp.messina.it' : $pic->dittaScelta->email)
+                ->setSubject('ASP 5 Messina - Nuovo PAI assistito ' . $pic->cf)->attach(Yii::$app->params['tempPath'] . "$random.pdf", ['fileName' => "PAI-$pic->cf.pdf"])->send();
+            if ($message) {
+                $pic->data_ora_invio = date('Y-m-d H:i:s');
+                // remove temp file
+                unlink(Yii::$app->params['tempPath'] . "$random.pdf");
+                $pic->save();
+            }
+            return $message;
+        } catch (\yii\db\Exception $ex) {
+            return false;
+        }
+    }
+
+    public function actionReport($id = null)
+    {
+        if ($id) {
+            $pic = AdiPic::findOne($id);
+            if ($this->request->isPost) {
+                $pdf = $this->generaPDFPic($pic);
                 if (array_key_exists('report', $this->request->post()))
-                    $mpdf->Output();
-                else if (array_key_exists('notifica', $this->request->post()) || $inviaReport) {
-                    // save file to temp folder
+                    $pdf->Output();
+                else if (array_key_exists('notifica', $this->request->post())) {
                     $random = Yii::$app->security->generateRandomString(10);
-                    // create if not exist path Yii::$app->params['tempPath']
                     if (!is_dir(Yii::$app->params['tempPath']))
                         mkdir(Yii::$app->params['tempPath'], 0777, true);
-                    $mpdf->Output(Yii::$app->params['tempPath'] . "$random.pdf", 'F');
+                    $pdf->Output(Yii::$app->params['tempPath'] . "$random.pdf", 'F');
                     try {
-                        $test = true;
-                        $message = Yii::$app->mailer->compose()->setHtmlBody(
-                            "In data " . Yii::$app->formatter->asDate($pic->data_ora_invio) . " è stato a voi assegnato l'assistito:<br /><br /> $pic->cognome $pic->nome con CF $pic->cf. <br /> In allegato il PAI in oggetto.<br />Cordiali saluti<br /><br />ASP 5 Messina")
-                            ->setFrom('roberto.dedomenico@asp.messina.it')
-                            ->setTo($test ? 'roberto.dedomenico@asp.messina.it' : $pic->dittaScelta->email)
-                            ->setSubject('ASP 5 Messina - Nuovo PAI assistito ' .$pic->cf)->attach(Yii::$app->params['tempPath'] . "$random.pdf", ['fileName' => "PAI-$pic->cf.pdf"])->send();
-                        if ($message) {
-                            $pic->data_ora_invio = date('Y-m-d H:i:s');
-                            Yii::$app->session->setFlash('success', "PAI inviato correttamente via mail a " . $pic->dittaScelta->denominazione);
-                            // remove temp file
-                            unlink(Yii::$app->params['tempPath'] . "$random.pdf");
-                            $pic->save();
-                        } else
+                        $res = $this->inviaPdfAllaDitta($pic);
+                        if ($res)
+                            Yii::$app->session->setFlash('success', "Email alla ditta " . $pic->dittaScelta->denominazione . " inviata correttamente");
+                        else
                             Yii::$app->session->setFlash('error', 'Errore nell\'invio dell\'email');
                     } catch (Exception $e) {
-                        // Gestisci l'eccezione o registra l'errore
                         Yii::$app->session->setFlash('error', 'Errore nell\'invio dell\'email');
                     }
                 }
@@ -219,11 +239,16 @@ class AdiController extends \yii\web\Controller
                 // save
                 if ($pic->save()) {
                     Yii::$app->session->setFlash('success', 'Dati salvati correttamente');
+                    $out = $this->inviaPdfAllaDitta($pic);
+                    if ($out)
+                        Yii::$app->session->setFlash('success', "Email alla ditta " . $pic->dittaScelta->denominazione . " inviata correttamente");
+                    else
+                        Yii::$app->session->setFlash('error', 'Errore nell\'invio dell\'email');
                 } else {
                     Yii::$app->session->setFlash('error', 'Errore nel salvataggio dei dati');
                     return $this->render('scelta-ditta', ['pic' => $pic]);
                 }
-                return $this->redirect(['report', 'id' => $pic->id, 'inviaReport' => true]);
+
             }
         }
         return $this->render('index');

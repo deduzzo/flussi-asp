@@ -27,6 +27,7 @@ use yii\helpers\Json;
  * @property string|null $nome_file
  * @property string|null $data_ora_invio
  * @property int|null $ditta_scelta
+ * @property string|null $id_utente
  *
  * @property DitteAccreditate $dittaScelta
  */
@@ -55,6 +56,7 @@ class AdiPic extends \yii\db\ActiveRecord
             [['ditta_scelta'], 'integer'],
             [['distretto', 'cartella_aster', 'cf', 'cognome', 'nome', 'dati_nascita', 'dati_domicilio', 'recapiti', 'medico_curante', 'medico_prescrittore', 'nome_file'], 'string', 'max' => 100],
             [['dati_residenza', 'diagnosi'], 'string', 'max' => 200],
+            [['id_utente'], 'string', 'max' => 50],
             [['ditta_scelta'], 'exist', 'skipOnError' => true, 'targetClass' => DitteAccreditate::class, 'targetAttribute' => ['ditta_scelta' => 'id']],
             [['ditta_scelta'], 'required', 'on' => self::SCENARIO_SCELTA_DITTA],
         ];
@@ -84,6 +86,7 @@ class AdiPic extends \yii\db\ActiveRecord
             'nome_file' => 'Nome File',
             'data_ora_invio' => 'Data Ora Invio',
             'ditta_scelta' => 'Ditta Scelta',
+            'id_utente' => 'Id Utente',
         ];
     }
 
