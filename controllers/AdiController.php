@@ -124,7 +124,7 @@ class AdiController extends \yii\web\Controller
                   <table style="border: 0">
                   <tr>
                     <td rowspan="2" colspan="6">
-                        <img src="/static/images/asp-messina.jpg" alt="ASP Messina" class="logo">
+                        <img src="<?= Yii::getAlias('@web') ?>/static/images/asp-messina.jpg" alt="ASP Messina" class="logo">
                     </td>
                     <td style="text-align: center; padding-top: 40px" colspan="6">
                       <p>SPORTELLO UNICO DI ACCESSO ALLE CURE DOMICILIARI</p>
