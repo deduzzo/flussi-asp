@@ -204,9 +204,22 @@ class AdiController extends \yii\web\Controller
         if (!is_dir(Yii::$app->params['tempPath']))
             mkdir(Yii::$app->params['tempPath'], 0777, true);
         $pdf->Output(Yii::$app->params['tempPath'] . "$random.pdf", 'F');
+
+        $oggettoMail = $pic->dittaScelta->denominazione. " - Conferma ricezione PAI assistito: ". $pic->cf;
+
+        $distrettiString = 'adi.menord" <a href="mailto:adi.menord@asp.messina.it?subject=' . rawurlencode($oggettoMail) . '">adi.menord@asp.messina.it</a><br />
+                    adi.mesud" <a href="mailto:adi.mesud@asp.messina.it?subject=' . rawurlencode($oggettoMail) . '">adi.mesud@asp.messina.it</a><br />
+                    adi.barcellona-pg" <a href="mailto:adi.barcellona-pg@asp.messina.it?subject=' . rawurlencode($oggettoMail) . '">adi.barcellona-pg@asp.messina.it</a><br />
+                    adi.lipari" <a href="mailto:adi.lipari@asp.messina.it?subject=' . rawurlencode($oggettoMail) . '">adi.lipari@asp.messina.it</a><br />
+                    adi.milazzo" <a href="mailto:adi.milazzo@asp.messina.it?subject=' . rawurlencode($oggettoMail) . '">adi.milazzo@asp.messina.it</a><br />
+                    adi.mistretta" <a href="mailto:adi.mistretta@asp.messina.it?subject=' . rawurlencode($oggettoMail) . '">adi.mistretta@asp.messina.it</a><br />
+                    adi.patti" <a href="mailto:adi.patti@asp.messina.it?subject=' . rawurlencode($oggettoMail) . '">adi.patti@asp.messina.it</a><br />
+                    adi.sagata" <a href="mailto:adi.sagata@asp.messina.it?subject=' . rawurlencode($oggettoMail) . '">adi.sagata@asp.messina.it</a><br />
+                    adi.taormina" <a href="mailto:adi.taormina@asp.messina.it?subject=' . rawurlencode($oggettoMail) . '">adi.taormina@asp.messina.it</a>';
         try {
             $message = Yii::$app->mailer->compose()->setHtmlBody(
-                "In data " . Yii::$app->formatter->asDate($pic->data_pic) . " è stato a voi assegnato l'assistito:<br /><br /> $pic->cognome $pic->nome con CF $pic->cf. <br /> In allegato il PAI in oggetto.<br />Cordiali saluti<br /><br />ASP 5 Messina")
+                "In data " . Yii::$app->formatter->asDate($pic->data_pic) . " è stato a voi assegnato l'assistito:<br /><br /> $pic->cognome $pic->nome con CF $pic->cf. <br /> In allegato il PAI in oggetto. <br />Si prega se possibile di restituire conferma al servizio adi del distretto mittente.<br /><br />Di seguito i recapiti:<br />"
+                .$distrettiString."<br />Cordiali saluti<br /><br />ASP 5 Messina")
                 ->setFrom('roberto.dedomenico@asp.messina.it')
                 ->setTo($test ? 'roberto.dedomenico@asp.messina.it' : $pic->dittaScelta->email)
                 ->setSubject('ASP 5 Messina - Nuovo PAI assistito ' . $pic->cf)->attach(Yii::$app->params['tempPath'] . "$random.pdf", ['fileName' => "PAI-$pic->cf.pdf"])->send();
