@@ -225,7 +225,7 @@ class AdiController extends \yii\web\Controller
             $message = Yii::$app->mailer->compose()->setHtmlBody(
                 "In data " . Yii::$app->formatter->asDate($pic->data_pic) . " è stato a voi assegnato l'assistito:<br /><br /> $pic->cognome $pic->nome con CF $pic->cf. <br /> In allegato il PAI in oggetto. <br />Si prega se possibile di restituire conferma al servizio adi del distretto mittente.<br /><br />Di seguito i recapiti:<br />"
                 .$distrettiString."<br />Cordiali saluti<br /><br />ASP 5 Messina")
-                ->setFrom('roberto.dedomenico@asp.messina.it')
+                ->setFrom('pazientefragile@asp.messina.it')
                 ->setTo($test ? 'roberto.dedomenico@asp.messina.it' : $pic->dittaScelta->email)
                 ->setSubject('ASP 5 Messina - Nuovo PAI assistito ' . $pic->cf)->attach(Yii::$app->params['tempPath'] . "$random.pdf", ['fileName' => "PAI-$pic->cf.pdf"])->send();
             if ($message) {
