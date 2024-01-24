@@ -14,6 +14,7 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
 
     public static $utentiDefault = [
         "adi" => "adi",
+        "lucia.todisco" => "lucia.todisco",
     ];
 
 

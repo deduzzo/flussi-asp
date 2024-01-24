@@ -26,6 +26,27 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
+
+<script>
+    function handleClick(buttonId) {
+        var submitButton = document.getElementById(buttonId);
+
+        // Aggiunge il cerchio di caricamento e disabilita il pulsante
+        submitButton.classList.add('button-loading');
+        submitButton.disabled = true;
+        var loader = document.createElement('div');
+        loader.className = 'loader';
+        submitButton.innerHTML = '<span class="btn-text">' + submitButton.innerHTML + '</span>';
+        submitButton.appendChild(loader);
+
+        // Invia il form
+        // Si noti che qui il form viene inviato direttamente. Se hai bisogno di
+        // fare altre operazioni prima dell'invio, dovrai implementarle qui.
+        document.getElementById('myForm').submit();
+    }
+</script>
+
+
 <body class="d-flex flex-column h-100">
 <?php $this->beginBody() ?>
 

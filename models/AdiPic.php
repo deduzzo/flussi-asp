@@ -44,6 +44,13 @@ class AdiPic extends \yii\db\ActiveRecord
         return 'adi_pic';
     }
 
+    public static function getTuttiDistretti()
+    {
+        $distretti = array_unique(self::find()->select('distretto')->column());
+        // return map of distretti same key -> value
+        return array_combine($distretti, $distretti);
+    }
+
     /**
      * {@inheritdoc}
      */
