@@ -82,7 +82,7 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
                     "password" => $password
                 ]) ;
             case TipologiaLogin::STATICO:
-                $utente = Utenti::findOne(['username' => $username, 'password' => $password]);
+                $utente = Utenti::findOne(['username' => $username, 'password' => $password, 'attivo' => true]);
                 if ($utente)
                     return new User([
                         "id" => $username,
