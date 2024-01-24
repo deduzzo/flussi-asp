@@ -89,8 +89,8 @@ a.desc:after {
 
 .loader {
     display: inline-block;
-    border: 2px solid #f3f3f3;
-    border-top: 2px solid #3498db;
+    border: 2px solid #000000;
+    border-top: 2px solid #413939;
     border-radius: 50%;
     width: 14px;
     height: 14px;

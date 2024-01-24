@@ -77,7 +77,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
     <div class="text-center">
-        <?= Html::submitButton('Conferma PIC e assegna alla ditta selezionata', ['class' => 'btn btn-success',"onclick" => "handleClick(this.id)"]) ?>
+        <?= Html::submitButton('Conferma PIC e assegna alla ditta selezionata', ['class' => 'btn btn-success',"id" => "subBtn", "onclick" => "handleClick(this.id)"]) ?>
     </div>
 
     <?php ActiveForm::end() ?>
