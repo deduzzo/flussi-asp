@@ -52,6 +52,7 @@ class AdiPic extends \yii\db\ActiveRecord
         return [
             [['data_pic', 'data_ora_invio'], 'safe'],
             [['distretto','data_pic','cf','nome','cognome','dati_nascita','dati_residenza','recapiti','diagnosi','piano_terapeutico'], 'required'],
+            [['cf'], 'required'],
             [['piano_terapeutico'], 'string'],
             [['ditta_scelta'], 'integer'],
             [['distretto', 'cartella_aster', 'cf', 'cognome', 'nome', 'dati_nascita', 'dati_domicilio', 'recapiti', 'medico_curante', 'medico_prescrittore', 'nome_file'], 'string', 'max' => 100],

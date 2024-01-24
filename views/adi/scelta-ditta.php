@@ -10,7 +10,7 @@ use yii\helpers\Url;
 /* @var $pic app\models\AdiPic */
 
 $this->title = 'ADI - SIAD';
-$this->params['breadcrumbs'][] = "Nuov";
+$this->params['breadcrumbs'][] = "Nuova PIC";
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -19,7 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php $form = ActiveForm::begin(); ?>
 
     <div class="alert alert-info" role="alert">
-        Selezionare la ditta preselta dall'utente:
+        Selezionare la scelta dall'utente:
     </div>
 
     <?php
@@ -51,6 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= $form->field($pic, 'medico_prescrittore')->hiddenInput()->label(false) ?>
     <?= $form->field($pic, 'diagnosi')->hiddenInput()->label(false) ?>
     <?= $form->field($pic, 'nome_file')->hiddenInput()->label(false) ?>
+    <?= $form->field($pic, 'id_utente')->hiddenInput()->label(false) ?>
 
     <div class="form-group">
         <fieldset>
