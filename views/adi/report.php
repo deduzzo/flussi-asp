@@ -70,7 +70,11 @@ echo $form->field($pic, 'ditta_scelta')->dropDownList($items, ['prompt' => 'Sele
 
 <?php
 echo Html::beginForm();
-echo Html::submitButton('Invia nuovamente mail completa alla ditta prescelta', ['class' => 'btn btn-warning', 'name' => 'notifica', 'value' => 'notifica']);
+echo "<div class='row'>";
+echo "<div class='col-md-3'>".Html::submitButton('Nuovo invio PAI alla ditta prescelta', ['class' => 'btn btn-warning', 'name' => 'notifica', 'value' => 'notifica'])."</div>";
+// echo link to download the report (link button class secondary
+echo "<div class='col-md-3'>".Html::a('PAI originale (ASTER)', Url::to(['/adi/download', 'id' => $pic->id, 'file' => $pic->nome_file,'isOriginale' => true]), ['class' => 'btn btn-secondary', 'target' => '_blank'])."</div>";
+
 echo Html::endForm();
 ?>
 

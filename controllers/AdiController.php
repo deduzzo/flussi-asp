@@ -196,10 +196,10 @@ class AdiController extends \yii\web\Controller
                   <tr>
                     <td colspan='12' style='padding-top: 10px'><b>DITTA PRESCELTA:</b></td></tr>
                     <tr>
-                    <td colspan='12' style='padding-top: 5px'><h2>" . $pic->dittaScelta->denominazione . "</h2></td>
+                    <td colspan='12' style='padding-top: 5px; color: red'><h2>" . $pic->dittaScelta->denominazione . "</h2></td>
                   </tr>
                   <tr>
-                    <td colspan='12' style='padding-top: 10px'><b>EVENTUALI NOTE:</b></td></tr>
+                    <td colspan='12' style='padding-top: 20px'><b>EVENTUALI NOTE:</b></td></tr>
                     <tr>
                     <td colspan='12' style='padding-top: 5px'>" . $pic->note . "</td>
                   </tr>
@@ -242,7 +242,7 @@ class AdiController extends \yii\web\Controller
         try {
             $altriFileDaAllegare = glob(Yii::$app->params['uploadPath'] . DIRECTORY_SEPARATOR . $pic->id . DIRECTORY_SEPARATOR . '*');
             $message = Yii::$app->mailer->compose()->setHtmlBody(
-                "In data " . Yii::$app->formatter->asDate($pic->data_pic) . " l'utente " . $pic->id_utente . " ha a voi assegnato l'assistito:<br /><br /> $pic->cognome $pic->nome con CF $pic->cf. <br /> In allegato il PAI in oggetto. <br /><br />" .
+                "In data " . Yii::$app->formatter->asDate($pic->data_pic) . " l'utente " . $pic->id_utente . " ha inserito un PAI a voi assegnato:<br /><br /> $pic->cognome $pic->nome con CF $pic->cf. <br /><br /> In allegato il PAI in oggetto. <br /><br />" .
                 ($pic->note ? "<b>NOTE:</b><br />" . $pic->note . "<br /><br />" : "") .
                 (count($altriFileDaAllegare) > 0 ? "<b> SONO PRESENTI ALLEGATI AGGIUNTIVI, si prega di prendere visione<br /><br /></b>" : "") .
                 "<b>Si prega se possibile di restituire conferma via mail al servizio adi distrettuale di competenza utilizzando (se possibile) uno dei link in basso (in base al distretto di competenza).</b><br /><br />Di seguito i recapiti:<br /><br />"
@@ -268,9 +268,9 @@ class AdiController extends \yii\web\Controller
         }
     }
 
-    public function actionDownload($id, $file)
+    public function actionDownload($id, $file,$isOriginale = false)
     {
-        $path = Yii::$app->params['uploadPath'] . DIRECTORY_SEPARATOR . $id . DIRECTORY_SEPARATOR . $file;
+        $path = Yii::$app->params['uploadPath'] . (!$isOriginale ? (DIRECTORY_SEPARATOR . $id . DIRECTORY_SEPARATOR . $file) : (DIRECTORY_SEPARATOR.$file));
         if (file_exists($path)) {
             return Yii::$app->response->sendFile($path);
         } else {
