@@ -202,7 +202,7 @@ class AdiController extends \yii\web\Controller
     private function inviaPdfAllaDitta($pic)
     {
         $pdf = $this->generaPDFPic($pic);
-        $test = false;
+        $test = true;
         // save file to temp folder
         $random = Yii::$app->security->generateRandomString(10);
         // create if not exist path Yii::$app->params['tempPath']
@@ -225,7 +225,8 @@ class AdiController extends \yii\web\Controller
             $message = Yii::$app->mailer->compose()->setHtmlBody(
                 "In data " . Yii::$app->formatter->asDate($pic->data_pic) . " è stato a voi assegnato l'assistito:<br /><br /> $pic->cognome $pic->nome con CF $pic->cf. <br /> In allegato il PAI in oggetto. <br /><br /><b>Si prega se possibile di restituire conferma via mail al servizio adi distrettuale di competenza utilizzando (se possibile) uno dei link in basso (in base al distretto di competenza).</b><br /><br />Di seguito i recapiti:<br /><br />"
                 .$distrettiString."<br /><br /><br /><b>Cordiali saluti</b><br /><br />ASP 5 Messina")
-                ->setFrom('pazientefragile@asp.messina.it')
+                ->setFrom(Yii::$app->params['adminEmail'])
+                ->setCc(Yii::$app->params['ccEmail'])
                 ->setTo($test ? 'roberto.dedomenico@asp.messina.it' : $pic->dittaScelta->email)
                 ->setSubject($oggettoMail)->attach(Yii::$app->params['tempPath'] . "$random.pdf", ['fileName' => "PAI-$pic->cf.pdf"])->send();
             if ($message) {
