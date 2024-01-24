@@ -17,6 +17,7 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
         "lucia.todisco" => "lucia.todisco",
         "pino.camera" => "pino.camera",
         "scavino.francesco" => "scavino.francesco",
+        "antonio.nicita" => "antonio.nicita",
     ];
 
 
