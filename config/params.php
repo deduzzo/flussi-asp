@@ -7,4 +7,5 @@ return [
     'uploadPath' => dirname(__DIR__) . DIRECTORY_SEPARATOR. 'uploads',
     // temp path : upload path + temp
     'tempPath' => dirname(__DIR__) .  DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.'temp',
+    'icon-framework' => 'fa',
 ];

@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\AdiPicSearch;
 use app\models\utils\SymfonyMailerComponent;
 use app\models\AdiPic;
 use app\models\FileUpload;
@@ -25,10 +26,10 @@ class AdiController extends \yii\web\Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['index', 'scelta-ditta', 'report', 'cerca', 'nuova'],
+                'only' => ['index', 'scelta-ditta', 'report', 'cerca', 'nuova', 'download'],
                 'rules' => [
                     [
-                        'actions' => ['index', 'scelta-ditta', 'report', 'cerca', 'nuova'],
+                        'actions' => ['index', 'scelta-ditta', 'report', 'cerca', 'nuova', 'download'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -275,6 +276,15 @@ class AdiController extends \yii\web\Controller
         } else {
             throw new \yii\web\NotFoundHttpException("File $file non trovato");
         }
+    }
+
+    public function actionIndex() {
+        $searchProvider = new AdiPicSearch();
+        $dataProvider = $searchProvider->search(Yii::$app->request->queryParams, true);
+        return $this->render('index', [
+            'dataProvider' => $dataProvider,
+            'searchModel' => $searchProvider,
+        ]);
     }
 
     public function actionReport($id = null)
