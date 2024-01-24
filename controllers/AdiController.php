@@ -200,7 +200,7 @@ class AdiController extends \yii\web\Controller
                   <tr>
                     <td colspan='12' style='padding-top: 10px'><b>EVENTUALI NOTE:</b></td></tr>
                     <tr>
-                    <td colspan='12' style='padding-top: 5px'><h2>" . $pic->note . "</h2></td>
+                    <td colspan='12' style='padding-top: 5px'>" . $pic->note . "</td>
                   </tr>
                   </table>
                   <div class='footer' style='padding-top: 20px'>
