@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Carbon\Carbon;
 use Yii;
 use yii\debug\panels\EventPanel;
 use yii\helpers\Json;
@@ -12,7 +13,10 @@ use yii\helpers\Json;
  * @property int $id
  * @property string|null $distretto
  * @property string|null $data_pic
+ * @property string|null $inizio
+ * @property string|null $fine
  * @property string|null $cartella_aster
+ * @property int|null $num_contatto
  * @property string $cf
  * @property string|null $cognome
  * @property string|null $nome
@@ -28,6 +32,8 @@ use yii\helpers\Json;
  * @property string|null $data_ora_invio
  * @property int|null $ditta_scelta
  * @property string|null $id_utente
+ * @property string|null $note
+ * @property bool $attivo
  *
  * @property DitteAccreditate $dittaScelta
  */
@@ -57,11 +63,12 @@ class AdiPic extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['data_pic', 'data_ora_invio'], 'safe'],
-            [['distretto','data_pic','cf','nome','cognome','dati_nascita','dati_residenza','recapiti','diagnosi','piano_terapeutico'], 'required'],
+            [['data_pic', 'inizio', 'fine', 'data_ora_invio'], 'safe'],
+            [['distretto', 'data_pic', 'cf', 'nome', 'cognome', 'dati_nascita', 'dati_residenza', 'recapiti', 'diagnosi', 'piano_terapeutico'], 'required'],
             [['cf'], 'required'],
-            [['piano_terapeutico'], 'string'],
-            [['ditta_scelta'], 'integer'],
+            [['piano_terapeutico', 'note'], 'string'],
+            [['attivo'], 'boolean'],
+            [['num_contatto', 'ditta_scelta'], 'integer'],
             [['distretto', 'cartella_aster', 'cf', 'cognome', 'nome', 'dati_nascita', 'dati_domicilio', 'recapiti', 'medico_curante', 'medico_prescrittore', 'nome_file'], 'string', 'max' => 100],
             [['dati_residenza'], 'string', 'max' => 200],
             [['diagnosi'], 'string', 'max' => 1000],
@@ -80,7 +87,10 @@ class AdiPic extends \yii\db\ActiveRecord
             'id' => 'ID',
             'distretto' => 'Distretto',
             'data_pic' => 'Data Pic',
+            'inizio' => 'Inizio',
+            'fine' => 'Fine',
             'cartella_aster' => 'Cartella Aster',
+            'num_contatto' => 'Num Contatto',
             'cf' => 'Cf',
             'cognome' => 'Cognome',
             'nome' => 'Nome',
@@ -96,6 +106,8 @@ class AdiPic extends \yii\db\ActiveRecord
             'data_ora_invio' => 'Data Ora Invio',
             'ditta_scelta' => 'Ditta Scelta',
             'id_utente' => 'Id Utente',
+            'note' => 'Note',
+            'attivo' => 'Attivo',
         ];
     }
 
@@ -109,17 +121,24 @@ class AdiPic extends \yii\db\ActiveRecord
         return $this->hasOne(DitteAccreditate::class, ['id' => 'ditta_scelta']);
     }
 
-    public function getPianoTerapeutico()
+    public static function getPianoTerapeutico($pianoTerapeuticoString)
     {
-        $out = Json::decode($this->piano_terapeutico);
         $outString = "";
-        if ($out) {
-            foreach ($out as $intervento) {
+        $da = null;
+        $a = null;
+        if ($pianoTerapeuticoString) {
+            foreach ($pianoTerapeuticoString as $intervento) {
                 $interventoSplitted = explode("\t", $intervento);
                 for ($i = 0; $i < count($interventoSplitted); $i++) {
-                    if ($i === 0)
+                    if ($i === 0) {
                         $outString .= "DA/A: " . str_replace(" ", "-", $interventoSplitted[$i]);
-                    else if ($i === count($interventoSplitted) - 1)
+                        if (is_null($da) && is_null($a)) {
+                            $daA = explode(" ", $interventoSplitted[$i]);
+                            // import from carbon
+                            $da =$daA[0];
+                            $a = $daA[1];
+                        }
+                    } else if ($i === count($interventoSplitted) - 1)
                         $outString .= " - FREQUENZA: $interventoSplitted[$i]";
                     else
                         $outString .= " - " . $interventoSplitted[$i];
@@ -127,6 +146,6 @@ class AdiPic extends \yii\db\ActiveRecord
                 $outString .= "\n";
             }
         }
-        return $outString;
+        return ['da' => $da, 'a' => $a, 'out' => $outString];
     }
 }

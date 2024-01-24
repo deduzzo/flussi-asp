@@ -17,7 +17,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php $form = ActiveForm::begin([
         'action' => Url::to(['/adi/scelta-ditta']), // Imposta l'azione del form
         // Altri parametri del form, se necessari...
-    ]); ?>
+    ]);
+    ?>
 
     <!-- show info alert with text "verificare i dati prima di inviare il pic" -->
     <div class="alert alert-info" role="alert">
@@ -38,9 +39,19 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="col-md-2">
                     <?= $form->field($pic, 'cartella_aster')->textInput(['maxlength' => true]) ?>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <?= $form->field($pic, 'id_utente')->textInput(['maxlength' => true]) ?>
                 </div>
+                <div class="col-md-2">
+                    <?= $form->field($pic, 'num_contatto')->textInput(['maxlength' => true]) ?>
+                </div>
+                <div class="col-md-4">
+                    <?= $form->field($pic, 'inizio')->textInput(['type' => 'date', 'maxlength' => true]) ?>
+                </div>
+                <div class="col-md-4">
+                    <?= $form->field($pic, 'fine')->textInput(['type' => 'date', 'maxlength' => true]) ?>
+                </div>
+                <div class="col-md-4"></div>
             </div>
         </fieldset>
         <fieldset>
@@ -82,7 +93,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= $form->field($pic, 'diagnosi')->textarea(['rows' => 2]) ?>
                 </div>
                 <div class="col-md-12">
-                    <?= $form->field($pic, 'piano_terapeutico')->textarea(['rows' => 8, 'value' => $pic->getPianoTerapeutico()]) ?>
+                    <?= $form->field($pic, 'piano_terapeutico')->textarea(['rows' => 8]) ?>
                 </div>
             </div>
         </fieldset>

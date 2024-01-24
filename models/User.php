@@ -12,15 +12,6 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
     public $authKey;
     public $accessToken;
 
-    public static $utentiDefault = [
-        "adi" => "adi",
-        "lucia.todisco" => "lucia.todisco",
-        "pino.camera" => "pino.camera",
-        "scavino.francesco" => "scavino.francesco",
-        "antonio.nicita" => "antonio.nicita",
-    ];
-
-
     /**
      * {@inheritdoc}
      */
@@ -91,7 +82,8 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
                     "password" => $password
                 ]) ;
             case TipologiaLogin::STATICO:
-                if (array_key_exists($username, self::$utentiDefault) && self::$utentiDefault[$username] == $password)
+                $utente = Utenti::findOne(['username' => $username, 'password' => $password]);
+                if ($utente)
                     return new User([
                         "id" => $username,
                         "username" => $username,

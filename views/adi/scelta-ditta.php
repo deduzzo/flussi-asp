@@ -8,6 +8,7 @@ use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $pic app\models\AdiPic */
+/* @var $ulterioriAllegati app\models\FileUpload */
 
 $this->title = 'ADI - SIAD';
 $this->params['breadcrumbs'][] = "Nuova PIC";
@@ -16,10 +17,11 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
 <div>
-    <?php $form = ActiveForm::begin(); ?>
+        <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
     <div class="alert alert-info" role="alert">
-        Selezionare la scelta dall'utente:
+        Selezionare la scelta dall'utente, ed eventuali note. <br />
+        E' possibile inoltre allegare ulteriori documentazione da allegare al PAI trascinando i file nella sezione "Allegati" (solo file .pdf, dimensione massima <?= ini_get('post_max_size') ?>)
     </div>
 
     <?php
@@ -33,6 +35,22 @@ $this->params['breadcrumbs'][] = $this->title;
         // div class success
         echo "<div class='alert alert-success' role='alert'>";
         echo $form->field($pic, 'ditta_scelta')->dropDownList($items, ['prompt' => 'Seleziona la ditta', 'class' => 'form-control'])->label("Ditta scelta dall'utente:", ['style' => 'font-weight: bold;']);
+        // echo note text area
+        echo $form->field($pic, 'note')->textarea(['rows' => 3])->label('Eventuali note da comunicare alla ditta:', ['style' => 'font-weight: bold;']);
+
+        echo $form->field($ulterioriAllegati, 'file')->widget(FileInput::classname(), [
+            'options' => ['multiple' => true],
+            'pluginOptions' => [
+                'allowedFileExtensions' => ['pdf'],
+                'dropZoneTitle' => 'Ulteriori file da allegare al file (facoltativi)',
+                'showCaption' => false,
+                'browseLabel' => 'Scegli eventuali allegati (solo .pdf)',
+            ]
+        ]);
+            echo "<div class='text-center'>";
+            echo Html::submitButton('Conferma PIC e assegna alla ditta selezionata', ['class' => 'btn btn-success',"id" => "subBtn", "onclick" => "handleClick(this.id)"]);
+            echo "</div>";
+
         echo "</div>";
     ?>
     <?= $form->field($pic, 'nome')->hiddenInput()->label(false) ?>
@@ -52,6 +70,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= $form->field($pic, 'diagnosi')->hiddenInput()->label(false) ?>
     <?= $form->field($pic, 'nome_file')->hiddenInput()->label(false) ?>
     <?= $form->field($pic, 'id_utente')->hiddenInput()->label(false) ?>
+    <?= $form->field($pic, 'inizio')->hiddenInput()->label(false) ?>
+    <?= $form->field($pic, 'fine')->hiddenInput()->label(false) ?>
+    <?= $form->field($pic, 'num_contatto')->hiddenInput()->label(false) ?>
 
     <div class="form-group">
         <fieldset>
@@ -76,9 +97,6 @@ $this->params['breadcrumbs'][] = $this->title;
         </fieldset>
     </div>
 
-    <div class="text-center">
-        <?= Html::submitButton('Conferma PIC e assegna alla ditta selezionata', ['class' => 'btn btn-success',"id" => "subBtn", "onclick" => "handleClick(this.id)"]) ?>
-    </div>
 
     <?php ActiveForm::end() ?>
 </div>
