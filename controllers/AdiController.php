@@ -223,7 +223,7 @@ class AdiController extends \yii\web\Controller
                     Taormina  -  <a href="mailto:adi.taormina@asp.messina.it?subject=' . rawurlencode("CONFERMA RICEZIONE ".$oggettoMail) . '">adi.taormina@asp.messina.it</a>';
         try {
             $message = Yii::$app->mailer->compose()->setHtmlBody(
-                "In data " . Yii::$app->formatter->asDate($pic->data_pic) . " è stato a voi assegnato l'assistito:<br /><br /> $pic->cognome $pic->nome con CF $pic->cf. <br /> In allegato il PAI in oggetto. <br /><br /><b>Si prega se possibile di restituire conferma via mail al servizio adi distrettuale di competenza utilizzando (se possibile) uno dei link in basso (in base al distretto di competenza).</b><br /><br />Di seguito i recapiti:<br /><br />"
+                "In data " . Yii::$app->formatter->asDate($pic->data_pic) . "l'utente ".$pic->id_utente." ha a voi assegnato l'assistito:<br /><br /> $pic->cognome $pic->nome con CF $pic->cf. <br /> In allegato il PAI in oggetto. <br /><br /><b>Si prega se possibile di restituire conferma via mail al servizio adi distrettuale di competenza utilizzando (se possibile) uno dei link in basso (in base al distretto di competenza).</b><br /><br />Di seguito i recapiti:<br /><br />"
                 .$distrettiString."<br /><br /><br /><b>Cordiali saluti</b><br /><br />ASP 5 Messina")
                 ->setFrom(Yii::$app->params['adminEmail'])
                 ->setCc(Yii::$app->params['ccEmail'])
