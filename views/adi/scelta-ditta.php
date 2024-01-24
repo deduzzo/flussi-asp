@@ -45,7 +45,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'dropZoneTitle' => 'Ulteriori file da allegare al file (facoltativi)',
                 'showCaption' => false,
                 'browseLabel' => 'Scegli eventuali allegati (solo .pdf)',
-                'overwriteInitial' => false,
             ]
         ]);
             echo "<div class='text-center'>";
