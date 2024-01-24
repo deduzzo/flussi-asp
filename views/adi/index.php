@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="alert alert-primary" role="alert">
     <?php
-    echo Html::a('Nuova PIC', ['adi/create'], ['class' => 'btn btn-primary']);
+    echo Html::a('Nuova PIC', ['adi/nuova'], ['class' => 'btn btn-primary']);
     ?>
 </div>
 <div class="card">
