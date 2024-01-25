@@ -53,7 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?php
         // optionselect for ditta
-        $ditta = DitteAccreditate::find()->where(['attiva' => true])->orderBy('denominazione')->all();
+        $ditta = DitteAccreditate::find()->where(['attiva' => true])->all();
         $items = [];
         foreach ($ditta as $d) {
             /* @var $d \app\models\DitteAccreditate */
