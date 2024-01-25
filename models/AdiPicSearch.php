@@ -50,7 +50,7 @@ class AdiPicSearch extends AdiPic
             'pagination' => array('pageSize' => 30),
             'sort' => [
                 'defaultOrder' => [
-                    'data_pic' => SORT_DESC,
+                    'id' => SORT_DESC,
                 ]
             ],
         ]);
