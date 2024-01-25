@@ -242,10 +242,11 @@ class AdiController extends \yii\web\Controller
                     Taormina  -  <a href="mailto:adi.taormina@asp.messina.it?subject=' . rawurlencode("CONFERMA RICEZIONE " . $oggettoMail) . '">adi.taormina@asp.messina.it</a>';
         try {
             $altriFileDaAllegare = glob(Yii::$app->params['uploadPath'] . DIRECTORY_SEPARATOR . $pic->id . DIRECTORY_SEPARATOR . '*');
+            $utente = str_replace("@asp.messina.it","",$pic->id_utente);
             $message = Yii::$app->mailer->compose()->setHtmlBody(
-                "In data " . Yii::$app->formatter->asDate($pic->data_pic) . " l'utente " . str_replace("@asp.messina.it","",$pic->id_utente) . " ha inserito un PAI a voi assegnato:<br /><br /> $pic->cognome $pic->nome con CF $pic->cf. <br /><br /> In allegato il PAI in oggetto. <br /><br />" .
+                "In data " . Yii::$app->formatter->asDate($pic->data_pic) . " l'utente " . $utente . " ha inserito un PAI a voi assegnato:<br /><br /> $pic->cognome $pic->nome con CF $pic->cf. <br /><br /> In allegato il PAI in oggetto. <br /><br />" .
                 ($pic->note ? "<b>NOTE:</b><br />" . $pic->note . "<br /><br />" : "") .
-                (count($altriFileDaAllegare) > 0 ? "<b> SONO PRESENTI ALLEGATI AGGIUNTIVI, si prega di prendere visione<br /><br /></b>" : "") .
+                ((count($altriFileDaAllegare) > 0) ? "<b> SONO PRESENTI ALLEGATI AGGIUNTIVI, si prega di prendere visione<br /><br /></b>" : "") .
                 "<b>Si prega se possibile di restituire conferma via mail al servizio adi distrettuale di competenza utilizzando (se possibile) uno dei link in basso (in base al distretto di competenza).</b><br /><br />Di seguito i recapiti:<br /><br />"
                 . $distrettiString . "<br /><br /><br /><b>Cordiali saluti</b><br /><br />ASP 5 Messina")
                 ->setFrom(Yii::$app->params['adminEmail'])
@@ -256,7 +257,7 @@ class AdiController extends \yii\web\Controller
             foreach ($altriFileDaAllegare as $altroFile) {
                 $message->attach($altroFile, ['fileName' => basename($altroFile)]);
             }
-            $message->send();
+            $message = $message->send();
             if ($message) {
                 $pic->data_ora_invio = date('Y-m-d H:i:s');
                 // remove temp file
