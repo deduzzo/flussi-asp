@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
         echo "<div class='alert alert-danger' role='alert'>";
         echo "<h4 class='alert-heading'>PAI presente</h4>";
         echo "<p>Il paziente ha già un PAI attivo (inizio ".Yii::$app->formatter->asDate($picPresente->inizio). " fine ".Yii::$app->formatter->asDate($picPresente->fine_reale).")  ";
-        // vai al pai
+        echo "<p><b>Verificare il pai precedente, e procedere solo se si tratta di un errore, o se si tratta di una rimodulazione o riattualizzazione del PAI precedente.</b>";
         echo Html::a('Vai al PAI', ['adi/report', 'id' => $picPresente->id], ['class' => 'btn btn-danger','target' => '_blank']);
         echo "</p><hr>";
         echo "<p class='mb-0'><b>Se si continua, il PAI attivo già presente verrà chiuso, in questo caso è necessario indicare la motivazione:</b></p>";
