@@ -32,8 +32,9 @@ $this->params['breadcrumbs'][] = $this->title;
         echo "<div class='alert alert-danger' role='alert'>";
         echo "<h4 class='alert-heading'>ATTENZIONE!! PAI attivo già presente</h4>";
         echo "<p><b>Il paziente ha già un PAI attivo (inizio ".Yii::$app->formatter->asDate($picPresente->inizio). " fine ".Yii::$app->formatter->asDate($picPresente->fine_reale)." scheda ASTER: ".$picPresente->cartella_aster." inserito da ".str_replace("@asp.messina.it","",$picPresente->id_utente).")  </b>";
-        echo "<p><b>Si prega di verificare il PAI precedente e di procedere soltanto se quello presente è errato oppure si tratta di una rimodulazione o riattualizzazione.</b><br /><br />";
+        echo "<p><b>Si prega di verificare il PAI precedente e di procedere SOLTANTO se quello presente è errato oppure si tratta di una rimodulazione o riattualizzazione.<br /> In caso contrario ".Html::a('basta tornare alla home cliccando qui.', ['adi/index'])."</b><br /><br />";
         echo Html::a('Visualizza il PAI precedente', ['adi/report', 'id' => $picPresente->id], ['class' => 'btn btn-danger','target' => '_blank']);
+        // echo link to return home
         echo "</p><hr>";
         echo "<p class='mb-0'><b>Se si continua, il PAI attivo già presente verrà chiuso. In questo caso è obbligatorio indicare una motivazione:</b></p>";
         // echo options for $pic->motivazione_chiusura, values "SCADENZA" and "RINUNCIA"

@@ -343,18 +343,18 @@ class AdiController extends \yii\web\Controller
                     $picPresente = null;
                 }
             }
-            $motivazione_chiusura = $pic->motivazione_chiusura;
-            $pic->motivazione_chiusura = null;
+            if ($picPresente)
+                $pic->scenario = AdiPic::SCENARIO_PIC_PRESENTE;
             if ($pic->validate()) {
+                $motivazione_chiusura = $pic->motivazione_chiusura;
+                $pic->motivazione_chiusura = null;
+                $pic->scenario = AdiPic::SCENARIO_SCELTA_DITTA;
                 if ($pic->save()) {
                     if ($picPresente) {
                         $picPresente->motivazione_chiusura = $motivazione_chiusura;
                         $picPresente->fine_reale = Carbon::createFromFormat('Y-m-d', $pic->inizio)->subDay()->format('Y-m-d');
                         $picPresente->attivo = false;
                         $picPresente->save();
-                        $pic->scenario = AdiPic::SCENARIO_SCELTA_DITTA;
-                        $pic->motivazione_chiusura = null;
-                        $pic->save();
                     }
 
                     $ulterioriAllegati->file = UploadedFile::getInstances($ulterioriAllegati, 'file');
@@ -382,7 +382,11 @@ class AdiController extends \yii\web\Controller
                     return $this->redirect(['report', 'id' => $pic->id]);
                 } else {
                     Yii::$app->session->setFlash('error', 'Errore nel salvataggio dei dati');
-                    return $this->render('scelta-ditta', ['pic' => $pic, 'ulterioriAllegati' => $ulterioriAllegati]);
+                    return $this->render('scelta-ditta', [
+                        'pic' => $pic,
+                        'ulterioriAllegati' => $ulterioriAllegati,
+                        'picPresente' => $picPresente
+                    ]);
                 }
             }
             return $this->render('scelta-ditta',
