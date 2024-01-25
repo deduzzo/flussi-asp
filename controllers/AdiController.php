@@ -218,7 +218,7 @@ class AdiController extends \yii\web\Controller
         return $mpdf;
     }
 
-    private function inviaPdfAllaDitta($pic)
+    private function inviaPdfAllaDitta($pic, $picPrecedente = null)
     {
         $pdf = $this->generaPDFPic($pic);
         $test = false;
@@ -229,7 +229,7 @@ class AdiController extends \yii\web\Controller
             mkdir(Yii::$app->params['tempPath'], 0777, true);
         $pdf->Output(Yii::$app->params['tempPath'] . "$random.pdf", 'F');
 
-        $oggettoMail = "PAI assistito " . $pic->cf . " cartella " . $pic->cartella_aster . " distretto " . $pic->distretto . " - " . $pic->dittaScelta->denominazione;
+        $oggettoMail = "Nuovo PAI  " . $pic->cf . " cartella n° " . $pic->cartella_aster  .($picPrecedente ? (" - [NUOVO, A SEGUITO DI ".$picPrecedente->motivazione_chiusura."]") : ""). " - ". $pic->distretto . " - " . $pic->dittaScelta->denominazione;
 
         $distrettiString = 'Messina NORD  -  <a href="mailto:adi.menord@asp.messina.it?subject=' . rawurlencode("CONFERMA RICEZIONE " . $oggettoMail) . '">adi.menord@asp.messina.it</a><br />
                     Messina SUD  -  <a href="mailto:adi.mesud@asp.messina.it?subject=' . rawurlencode("CONFERMA RICEZIONE " . $oggettoMail) . '">adi.mesud@asp.messina.it</a><br />
@@ -244,7 +244,8 @@ class AdiController extends \yii\web\Controller
             $altriFileDaAllegare = glob(Yii::$app->params['uploadPath'] . DIRECTORY_SEPARATOR . $pic->id . DIRECTORY_SEPARATOR . '*');
             $utente = str_replace("@asp.messina.it", "", $pic->id_utente);
             $message = Yii::$app->mailer->compose()->setHtmlBody(
-                "In data " . Yii::$app->formatter->asDate($pic->data_pic) . " l'utente " . $utente . " ha inserito un PAI a voi assegnato:<br /><br /> $pic->cognome $pic->nome con CF $pic->cf. <br /><br /> In allegato il PAI in oggetto. <br /><br />" .
+                "In data " . Yii::$app->formatter->asDate($pic->data_pic) . " l'utente " . $utente . " ha inserito un PAI a voi assegnato:<br /><br /> $pic->cognome $pic->nome con CF $pic->cf. <br /><br /> In allegato il PAI (e gli eventuali allegati).<br /><br />" .
+                ($picPrecedente ? ("<b>ATTENZIONE: il PAI precedente è stato chiuso in data ".Yii::$app->formatter->asDate($picPrecedente->fine_reale)." con motivazione: <i>" . $picPrecedente->motivazione_chiusura . "</i></b><br /><br />") : "").
                 ($pic->note ? "<b>NOTE:</b><br />" . $pic->note . "<br /><br />" : "") .
                 ((count($altriFileDaAllegare) > 0) ? "<b> SONO PRESENTI ALLEGATI AGGIUNTIVI, si prega di prendere visione<br /><br /></b>" : "") .
                 "<b>Si prega di inviare conferma via mail al servizio ADI distrettuale di competenza utilizzando (se possibile) uno dei link in basso:</b><br /><br />"
@@ -373,7 +374,7 @@ class AdiController extends \yii\web\Controller
                     }
 
                     Yii::$app->session->setFlash('success', 'Dati salvati correttamente');
-                    $out = $this->inviaPdfAllaDitta($pic);
+                    $out = $this->inviaPdfAllaDitta($pic,$picPresente);
                     if ($out) {
                         Yii::$app->session->setFlash('success', "Email alla ditta " . $pic->dittaScelta->denominazione . " inviata correttamente");
                         return $this->redirect(['report', 'id' => $pic->id]);
