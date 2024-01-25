@@ -34,21 +34,31 @@ echo $form->field($pic, 'ditta_scelta')->dropDownList($items, ['prompt' => 'Sele
     <fieldset>
         <legend>Sommario</legend>
         <div class="row">
-            <div class="col-md-3">
-                <?= $form->field($pic, 'nome')->textInput(['maxlength' => true, 'disabled' => true]) ?>
-            </div>
-            <div class="col-md-3">
-                <?= $form->field($pic, 'cognome')->textInput(['maxlength' => true, 'disabled' => true]) ?>
-            </div>
-            <div class="col-md-3">
-                <?= $form->field($pic, 'cf')->textInput(['maxlength' => true, 'disabled' => true]) ?>
-            </div>
-            <div class="col-md-12">
-                <?= $form->field($pic, 'diagnosi')->textarea(['rows' => 2, 'disabled' => true]) ?>
-            </div>
-            <div class="col-md-12">
-                <?= $form->field($pic, 'piano_terapeutico')->textarea(['rows' => 8, 'disabled' => true]) ?>
-            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <?= $form->field($pic, 'nome')->textInput(['maxlength' => true, 'disabled' => true]) ?>
+                </div>
+                <div class="col-md-2">
+                    <?= $form->field($pic, 'cognome')->textInput(['maxlength' => true, 'disabled' => true]) ?>
+                </div>
+                <div class="col-md-2">
+                    <?= $form->field($pic, 'cf')->textInput(['maxlength' => true, 'disabled' => true]) ?>
+                </div>
+                <div class="col-md-2">
+                    <?= $form->field($pic, 'data_pic')->textInput(['maxlength' => true, 'disabled' => true]) ?>
+                </div>
+                <div class="col-md-2">
+                    <?= $form->field($pic, 'inizio')->textInput(['maxlength' => true, 'disabled' => true]) ?>
+                </div>
+                <div class="col-md-2">
+                    <?= $form->field($pic, 'fine_reale')->textInput(['maxlength' => true, 'disabled' => true]) ?>
+                </div>
+                <div class="col-md-12">
+                    <?= $form->field($pic, 'diagnosi')->textarea(['rows' => 2, 'disabled' => true]) ?>
+                </div>
+                <div class="col-md-12">
+                    <?= $form->field($pic, 'piano_terapeutico')->textarea(['rows' => 8, 'disabled' => true]) ?>
+                </div>
             <!-- elenco allegati -->
             <?php $path = Yii::$app->params['uploadPath'] . DIRECTORY_SEPARATOR . $pic->id;
             if (is_dir($path)) {

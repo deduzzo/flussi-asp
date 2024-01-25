@@ -86,6 +86,7 @@ class AdiController extends \yii\web\Controller
                         $newPic->piano_terapeutico = $dati['interventi'];
                         $newPic->inizio = Carbon::createFromFormat('d/m/Y', $dati['da'])->format('Y-m-d');
                         $newPic->fine = Carbon::createFromFormat('d/m/Y', $dati['a'])->format('Y-m-d');
+                        $newPic->fine_reale = Carbon::createFromFormat('d/m/Y', $dati['a'])->format('Y-m-d');
                         $newPic->nome_file = $fileHash . '.' . $model->file->extension;
                         $newPic->data_ora_invio = date('Y-m-d H:i:s');
                         $newPic->distretto = $dati['distretto'];

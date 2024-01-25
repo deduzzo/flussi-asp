@@ -15,6 +15,7 @@ use yii\helpers\Json;
  * @property string|null $data_pic
  * @property string|null $inizio
  * @property string|null $fine
+ * @property string|null $fine_reale
  * @property string|null $cartella_aster
  * @property int|null $num_contatto
  * @property string $cf
@@ -63,8 +64,8 @@ class AdiPic extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['data_pic', 'inizio', 'fine', 'data_ora_invio'], 'safe'],
-            [['distretto', 'data_pic','inizio','fine', 'cf', 'nome', 'cognome', 'dati_nascita', 'dati_residenza', 'recapiti', 'diagnosi', 'piano_terapeutico'], 'required'],
+            [['data_pic', 'inizio', 'fine','fine_reale', 'data_ora_invio'], 'safe'],
+            [['distretto', 'data_pic','inizio','fine','fine_reale', 'cf', 'nome', 'cognome', 'dati_nascita', 'dati_residenza', 'recapiti', 'diagnosi', 'piano_terapeutico'], 'required'],
             [['cf'], 'required'],
             [['piano_terapeutico', 'note'], 'string'],
             [['attivo'], 'boolean'],

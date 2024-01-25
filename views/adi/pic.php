@@ -46,14 +46,16 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= $form->field($pic, 'num_contatto')->textInput(['maxlength' => true]) ?>
                 </div>
                 <div class="col-md-4">
-                    <?= $form->field($pic, 'inizio')->textInput(['type' => 'date', 'maxlength' => true]) ?>
+                    <?= $form->field($pic, 'inizio')->textInput(['type' => 'date', 'maxlength' => true, 'class' => 'form-control border-warning']) ?>
                 </div>
                 <div class="col-md-4">
-                    <?= $form->field($pic, 'fine')->textInput(['type' => 'date', 'maxlength' => true]) ?>
+                    <?= $form->field($pic, 'fine')->textInput(['type' => 'date', 'maxlength' => true, 'class' => 'form-control border-warning']) ?>
                 </div>
                 <div class="col-md-4"></div>
             </div>
         </fieldset>
+        <!-- input type hidden of fine_reale -->
+        <?= $form->field($pic, 'fine_reale')->hiddenInput()->label(false) ?>
         <fieldset>
             <legend>Dati Anagrafici</legend>
             <div class="row">
