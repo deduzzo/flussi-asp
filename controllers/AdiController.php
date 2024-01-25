@@ -144,58 +144,58 @@ class AdiController extends \yii\web\Controller
                     </td>
                   </tr>
                   <tr>
-                    <td colspan='1' style='padding-top: 10px'><b>Data</b></td>
-                    <td colspan='3' style='padding-top: 10px'>" . Yii::$app->formatter->asDate($pic->data_pic) . "</td>
-                    <td colspan='1' style='padding-top: 10px'><b>Inizio:</b></td>
-                    <td colspan='3' style='padding-top: 10px'>" . Yii::$app->formatter->asDate($pic->inizio) . "</td>
-                    <td colspan='1' style='padding-top: 10px'><b>Fine:</b></td>
-                    <td colspan='3' style='padding-top: 10px'>" . Yii::$app->formatter->asDate($pic->fine) . "</td>
+                    <td colspan='1' style='padding-top: 3px'><b>Data</b></td>
+                    <td colspan='3' style='padding-top: 3px'>" . Yii::$app->formatter->asDate($pic->data_pic) . "</td>
+                    <td colspan='1' style='padding-top: 3px'><b>Inizio:</b></td>
+                    <td colspan='3' style='padding-top: 3px'>" . Yii::$app->formatter->asDate($pic->inizio) . "</td>
+                    <td colspan='1' style='padding-top: 3px'><b>Fine:</b></td>
+                    <td colspan='3' style='padding-top: 3px'>" . Yii::$app->formatter->asDate($pic->fine) . "</td>
                   </tr>
                   <tr>
-                    <td colspan='1' style='padding-top: 10px'><b>Cartella<br /> ASTER</b></td>
-                    <td colspan='5' style='padding-top: 10px'>$pic->cartella_aster</td>
-                    <td colspan='1' style='padding-top: 10px'><b>Num Contatto:</b></td>
-                    <td colspan='5' style='padding-top: 10px'>" . $pic->num_contatto . "</td>
+                    <td colspan='1' style='padding-top: 3px'><b>Cartella<br /> ASTER</b></td>
+                    <td colspan='5' style='padding-top: 3px'>$pic->cartella_aster</td>
+                    <td colspan='1' style='padding-top: 3px'><b>Num Contatto:</b></td>
+                    <td colspan='5' style='padding-top: 3px'>" . $pic->num_contatto . "</td>
                   </tr>
                   <tr>
-                    <td colspan='1' style='padding-top: 10px'><b>Codice<br /> Fiscale</b></td>
-                    <td colspan='11' style='padding-top: 10px'>$pic->cf</td>
+                    <td colspan='1' style='padding-top: 3px'><b>Codice<br /> Fiscale</b></td>
+                    <td colspan='11' style='padding-top: 3px'>$pic->cf</td>
                     </tr>
                   <tr>
-                    <td colspan='1' style='padding-top: 10px'><b>Cognome</b></td>
-                    <td colspan='5' style='padding-top: 10px'>$pic->cognome</td>
-                    <td colspan='1' style='padding-top: 10px'><b>Nome</b></td>
-                    <td colspan='5' style='padding-top: 10px'>$pic->nome</td>
+                    <td colspan='1' style='padding-top: 3px'><b>Cognome</b></td>
+                    <td colspan='5' style='padding-top: 3px'>$pic->cognome</td>
+                    <td colspan='1' style='padding-top: 3px'><b>Nome</b></td>
+                    <td colspan='5' style='padding-top: 3px'>$pic->nome</td>
                   </tr>
                   <tr>
-                    <td colspan='1' style='padding-top: 10px'><b>Nato a</b></td>
-                    <td colspan='5' style='padding-top: 10px'>$pic->dati_nascita</td>
-                    <td colspan='1' style='padding-top: 10px'><b>Residenza</b></td>
-                    <td colspan='5' style='padding-top: 10px'>$pic->dati_residenza</td>
+                    <td colspan='1' style='padding-top: 3px'><b>Nato a</b></td>
+                    <td colspan='5' style='padding-top: 3px'>$pic->dati_nascita</td>
+                    <td colspan='1' style='padding-top: 3px'><b>Residenza</b></td>
+                    <td colspan='5' style='padding-top: 3px'>$pic->dati_residenza</td>
                   </tr>
                   <tr>
-                    <td colspan='1' style='padding-top: 10px'><b>Domiciliato a</b></td>
-                    <td colspan='5' style='padding-top: 10px'>$pic->dati_domicilio</td>
-                    <td colspan='1' style='padding-top: 10px'><b>Recapiti</b></td>
-                    <td colspan='5' style='padding-top: 10px'>$pic->recapiti</td>
+                    <td colspan='1' style='padding-top: 3px'><b>Domiciliato a</b></td>
+                    <td colspan='5' style='padding-top: 3px'>$pic->dati_domicilio</td>
+                    <td colspan='1' style='padding-top: 3px'><b>Recapiti</b></td>
+                    <td colspan='5' style='padding-top: 3px'>$pic->recapiti</td>
                   </tr>
                   <tr>
-                    <td colspan='1' style='padding-top: 10px'><b>Medico<br /> curante</b></td>
-                    <td colspan='5' style='padding-top: 10px'>$pic->medico_curante</td>
-                    <td colspan='1' style='padding-top: 10px'><b>Medico <br />prescrittore</b></td>
-                    <td colspan='5' style='padding-top: 10px'>$pic->medico_prescrittore</td>
+                    <td colspan='1' style='padding-top: 3px'><b>Medico<br /> curante</b></td>
+                    <td colspan='5' style='padding-top: 3px'>$pic->medico_curante</td>
+                    <td colspan='1' style='padding-top: 3px'><b>Medico <br />prescrittore</b></td>
+                    <td colspan='5' style='padding-top: 3px'>$pic->medico_prescrittore</td>
                   </tr>
                   <tr>
-                    <td colspan='1' style='padding-top: 10px'><b>Diagnosi</b></td>
-                    <td colspan='11' style='padding-top: 10px'>$pic->diagnosi</td>
+                    <td colspan='1' style='padding-top: 3px'><b>Diagnosi</b></td>
+                    <td colspan='11' style='padding-top: 3px'>$pic->diagnosi</td>
                   </tr>
                   <tr>
-                    <td colspan='12' style='padding-top: 10px'><b>Piano terapeutico</b></td></tr>
+                    <td colspan='12' style='padding-top: 3px'><b>Piano terapeutico</b></td></tr>
                     <tr>
                     <td colspan='12' style='padding-top: 5px'>$terapia</td>
                   </tr>
                   <tr>
-                    <td colspan='12' style='padding-top: 10px'><b>DITTA PRESCELTA:</b></td></tr>
+                    <td colspan='12' style='padding-top: 3px'><b>DITTA PRESCELTA:</b></td></tr>
                     <tr>
                     <td colspan='12' style='padding-top: 5px; color: red'><h2>" . $pic->dittaScelta->denominazione . "</h2></td>
                   </tr>
