@@ -53,6 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
         echo "</div>";
     ?>
+
     <?= $form->field($pic, 'nome')->hiddenInput()->label(false) ?>
     <?= $form->field($pic, 'cognome')->hiddenInput()->label(false) ?>
     <?= $form->field($pic, 'cf')->hiddenInput()->label(false) ?>
