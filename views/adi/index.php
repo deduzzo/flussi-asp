@@ -68,6 +68,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 'fine:date',
                 'cartella_aster',
                 [
+                        // stato with fa icon
+                    'attribute' => 'attivo',
+                    'format' => 'raw',
+                    'value' => function ($model) {
+                        return $model->attivo
+                            ? '<span class="badge bg-success">Attivo</span>'
+                            : '<span class="badge bg-danger">Chiuso</span>';
+                    },
+                ],
+                [
                     'attribute' => 'dittaScelta.denominazione',
                     'format' => 'raw',
                     'value' => function ($model) {

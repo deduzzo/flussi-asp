@@ -42,8 +42,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         'RIATTUALIZZAZIONE' => 'RIATTUALIZZAZIONE nuovo PAI',
                         'RIMODULAZIONE' => 'RIMODULAZIONE: Rimodulazione del PAI precedente',
                         'ERRORE' => 'ERRORE: PAI precedente inserito per errore',
-                    'RINUNCIA_ASSISTITO' => 'Rinuncia dell\'assistito',
-                    'RINUNCIA_DITTA' => 'Rinuncia o problema legato alla ditta precedente',
+                    'RINUNCIA_ASSISTITO' => 'RINUNCIA ASSISTITO: Rinuncia dell\'assistito',
+                    'RINUNCIA_DITTA' => 'PROBLEMA DITTA: Rinuncia o problema legato alla ditta precedente',
                     ], ['prompt' => 'Seleziona la motivazione', 'class' => 'form-control', 'style' => 'margin-top: 10px'])->label(false);
         echo "</div>";
         // echo button to download file
