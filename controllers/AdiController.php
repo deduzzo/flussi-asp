@@ -410,4 +410,13 @@ class AdiController extends \yii\web\Controller
             'pai' => $pai,
         ]);
     }
+
+    public function actionDuplicati(){
+        // trova tutti i AdiPic duplicati (stesso codice fiscale e attivi)
+        $duplicati = AdiPic::find()->select('cf')->where(['attivo' => true])->groupBy('cf')->having('count(*) > 1')->all();
+        // mostrali con echo
+        foreach ($duplicati as $duplicato){
+            echo $duplicato->id. " - ". $duplicato->cf . "<br />";
+        }
+    }
 }
