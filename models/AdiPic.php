@@ -112,7 +112,7 @@ class AdiPic extends \yii\db\ActiveRecord
             'id_utente' => 'Id Utente',
             'note' => 'Note',
             'motivazione_chisura' => 'Motivazioni Chiusura',
-            'attivo' => 'Attivo',
+            'attivo' => 'Stato',
         ];
     }
 
