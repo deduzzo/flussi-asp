@@ -30,6 +30,7 @@ use yii\helpers\Json;
  * @property string|null $diagnosi
  * @property string|null $piano_terapeutico
  * @property string|null $nome_file
+ * @property string|null $data_ora_inserimento
  * @property string|null $data_ora_invio
  * @property int|null $ditta_scelta
  * @property string|null $id_utente
@@ -66,7 +67,7 @@ class AdiPic extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['data_pic', 'inizio', 'fine','fine_reale', 'data_ora_invio'], 'safe'],
+            [['data_pic', 'inizio', 'fine','fine_reale', 'data_ora_invio','data_ora_inserimento'], 'safe'],
             [['distretto', 'data_pic','inizio','fine','fine_reale', 'cf', 'nome', 'cognome', 'dati_nascita', 'dati_residenza', 'recapiti', 'diagnosi', 'piano_terapeutico'], 'required'],
             [['cf'], 'required'],
             [['piano_terapeutico', 'note','motivazione_chiusura'], 'string'],
@@ -107,6 +108,7 @@ class AdiPic extends \yii\db\ActiveRecord
             'diagnosi' => 'Diagnosi',
             'piano_terapeutico' => 'Piano Terapeutico (da/a - intervento - frequenza)',
             'nome_file' => 'Nome File',
+            'data_ora_inserimento' => 'Data creazione',
             'data_ora_invio' => 'Data Ora Invio',
             'ditta_scelta' => 'Ditta Scelta',
             'id_utente' => 'Id Utente',

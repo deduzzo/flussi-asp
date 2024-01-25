@@ -423,5 +423,6 @@ class AdiController extends \yii\web\Controller
         foreach ($duplicati as $duplicato){
             echo $duplicato->id. " - ". $duplicato->cf . "<br />";
         }
+        echo date_default_timezone_get();
     }
 }
