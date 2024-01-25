@@ -84,7 +84,7 @@ class AdiPic extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
+            'id' => '#',
             'distretto' => 'Distretto',
             'data_pic' => 'Data Pic',
             'inizio' => 'Inizio',

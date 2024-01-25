@@ -31,6 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'options' => ['class' => 'table-responsive'],
             'tableOptions' => ['class' => 'table table-striped table-bordered fs-6'], // Aggiungi qui le classi di Bootstrap
             'columns' => [
+                'id',
                 'cf',
                 'distretto',
                 'data_pic:date',
