@@ -247,7 +247,7 @@ class AdiController extends \yii\web\Controller
                 "In data " . Yii::$app->formatter->asDate($pic->data_pic) . " l'utente " . $utente . " ha inserito un PAI a voi assegnato:<br /><br /> $pic->cognome $pic->nome con CF $pic->cf. <br /><br /> In allegato il PAI in oggetto. <br /><br />" .
                 ($pic->note ? "<b>NOTE:</b><br />" . $pic->note . "<br /><br />" : "") .
                 ((count($altriFileDaAllegare) > 0) ? "<b> SONO PRESENTI ALLEGATI AGGIUNTIVI, si prega di prendere visione<br /><br /></b>" : "") .
-                "<b>Si prega se possibile di restituire conferma via mail al servizio adi distrettuale di competenza utilizzando (se possibile) uno dei link in basso (in base al distretto di competenza).</b><br /><br />Di seguito i recapiti:<br /><br />"
+                "<b>Si prega di inviare conferma via mail al servizio ADI distrettuale di competenza utilizzando (se possibile) uno dei link in basso:</b><br /><br />"
                 . $distrettiString . "<br /><br /><br /><b>Cordiali saluti</b><br /><br />ASP 5 Messina")
                 ->setFrom(Yii::$app->params['adminEmail'])
                 ->setCc(Yii::$app->params['ccEmail'])
