@@ -34,6 +34,7 @@ use yii\helpers\Json;
  * @property int|null $ditta_scelta
  * @property string|null $id_utente
  * @property string|null $note
+ * @property string|null $motivazione_chiusura
  * @property bool $attivo
  *
  * @property DitteAccreditate $dittaScelta
@@ -42,6 +43,7 @@ class AdiPic extends \yii\db\ActiveRecord
 {
 
     const SCENARIO_SCELTA_DITTA = 'scelta_ditta';
+    const SCENARIO_PIC_PRESENTE = 'pic_presente';
 
     /**
      * {@inheritdoc}
@@ -67,7 +69,7 @@ class AdiPic extends \yii\db\ActiveRecord
             [['data_pic', 'inizio', 'fine','fine_reale', 'data_ora_invio'], 'safe'],
             [['distretto', 'data_pic','inizio','fine','fine_reale', 'cf', 'nome', 'cognome', 'dati_nascita', 'dati_residenza', 'recapiti', 'diagnosi', 'piano_terapeutico'], 'required'],
             [['cf'], 'required'],
-            [['piano_terapeutico', 'note'], 'string'],
+            [['piano_terapeutico', 'note','motivazione_chiusura'], 'string'],
             [['attivo'], 'boolean'],
             [['num_contatto', 'ditta_scelta'], 'integer'],
             [['distretto', 'cartella_aster', 'cf', 'cognome', 'nome', 'dati_nascita', 'dati_domicilio', 'recapiti', 'medico_curante', 'medico_prescrittore', 'nome_file'], 'string', 'max' => 100],
@@ -75,7 +77,8 @@ class AdiPic extends \yii\db\ActiveRecord
             [['diagnosi'], 'string', 'max' => 1000],
             [['id_utente'], 'string', 'max' => 50],
             [['ditta_scelta'], 'exist', 'skipOnError' => true, 'targetClass' => DitteAccreditate::class, 'targetAttribute' => ['ditta_scelta' => 'id']],
-            [['ditta_scelta'], 'required', 'on' => self::SCENARIO_SCELTA_DITTA],
+            [['ditta_scelta'], 'required', 'on' => [self::SCENARIO_SCELTA_DITTA, self::SCENARIO_PIC_PRESENTE]],
+            [['motivazione_chiusura'], 'required', 'on' => self::SCENARIO_PIC_PRESENTE],
         ];
     }
 
@@ -108,6 +111,7 @@ class AdiPic extends \yii\db\ActiveRecord
             'ditta_scelta' => 'Ditta Scelta',
             'id_utente' => 'Id Utente',
             'note' => 'Note',
+            'motivazione_chisura' => 'Motivazioni Chiusura',
             'attivo' => 'Attivo',
         ];
     }

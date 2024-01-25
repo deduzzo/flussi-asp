@@ -242,7 +242,7 @@ class AdiController extends \yii\web\Controller
                     Taormina  -  <a href="mailto:adi.taormina@asp.messina.it?subject=' . rawurlencode("CONFERMA RICEZIONE " . $oggettoMail) . '">adi.taormina@asp.messina.it</a>';
         try {
             $altriFileDaAllegare = glob(Yii::$app->params['uploadPath'] . DIRECTORY_SEPARATOR . $pic->id . DIRECTORY_SEPARATOR . '*');
-            $utente = str_replace("@asp.messina.it","",$pic->id_utente);
+            $utente = str_replace("@asp.messina.it", "", $pic->id_utente);
             $message = Yii::$app->mailer->compose()->setHtmlBody(
                 "In data " . Yii::$app->formatter->asDate($pic->data_pic) . " l'utente " . $utente . " ha inserito un PAI a voi assegnato:<br /><br /> $pic->cognome $pic->nome con CF $pic->cf. <br /><br /> In allegato il PAI in oggetto. <br /><br />" .
                 ($pic->note ? "<b>NOTE:</b><br />" . $pic->note . "<br /><br />" : "") .
@@ -270,9 +270,9 @@ class AdiController extends \yii\web\Controller
         }
     }
 
-    public function actionDownload($id, $file,$isOriginale = false)
+    public function actionDownload($id, $file, $isOriginale = false)
     {
-        $path = Yii::$app->params['uploadPath'] . (!$isOriginale ? (DIRECTORY_SEPARATOR . $id . DIRECTORY_SEPARATOR . $file) : (DIRECTORY_SEPARATOR.$file));
+        $path = Yii::$app->params['uploadPath'] . (!$isOriginale ? (DIRECTORY_SEPARATOR . $id . DIRECTORY_SEPARATOR . $file) : (DIRECTORY_SEPARATOR . $file));
         if (file_exists($path)) {
             return Yii::$app->response->sendFile($path);
         } else {
@@ -280,7 +280,8 @@ class AdiController extends \yii\web\Controller
         }
     }
 
-    public function actionIndex() {
+    public function actionIndex()
+    {
         $searchProvider = new AdiPicSearch();
         $dataProvider = $searchProvider->search(Yii::$app->request->queryParams, true);
         return $this->render('index', [
@@ -326,18 +327,35 @@ class AdiController extends \yii\web\Controller
         $pic->scenario = AdiPic::SCENARIO_SCELTA_DITTA;
         $ulterioriAllegati = new FileUpload();
         $ulterioriAllegati->scenario = FileUpload::SCENARIO_MULTIPLE;
+        $picPresente = null;
         if (Yii::$app->request->isPost) {
             $pic->load(Yii::$app->request->post());
-            if ($pic->attributes['ditta_scelta'] === null) {
-                return $this->render('scelta-ditta',
-                    [
-                        'pic' => $pic,
-                        'ulterioriAllegati' => $ulterioriAllegati,
-                    ]
-                );
-            } else {
-                // save
+            // find if there is another pic with the same cf and that overlaps $pic->inizio and $pic->fine
+            $picPresente = AdiPic::find()->where(['cf' => $pic->cf])
+                ->andWhere(['<=', 'inizio', $pic->fine_reale])
+                ->andWhere(['attivo' => true])
+                ->one();
+            if ($picPresente) {
+                if (Carbon::createFromFormat('Y-m-d', $picPresente->fine_reale)->isBefore(Carbon::now())) {
+                    $picPresente->attivo = false;
+                    $picPresente->save();
+                    $picPresente = null;
+                }
+            }
+            if ($picPresente)
+                $pic->scenario = AdiPic::SCENARIO_PIC_PRESENTE;
+
+            if ($pic->validate()) {
                 if ($pic->save()) {
+                    if ($picPresente) {
+                        $picPresente->motivazione_chiusura = $pic->motivazione_chiusura;
+                        $picPresente->fine_reale = Carbon::createFromFormat('Y-m-d', $pic->inizio)->subDay()->format('Y-m-d');
+                        $picPresente->attivo = false;
+                        $pic->motivazione_chiusura = null;
+                        $pic->save();
+                        $picPresente->save();
+                    }
+
                     $ulterioriAllegati->file = UploadedFile::getInstances($ulterioriAllegati, 'file');
                     if ($ulterioriAllegati->file !== null && count($ulterioriAllegati->file) > 0) {
                         if (!is_dir(Yii::$app->params['uploadPath']))
@@ -366,6 +384,14 @@ class AdiController extends \yii\web\Controller
                     return $this->render('scelta-ditta', ['pic' => $pic, 'ulterioriAllegati' => $ulterioriAllegati]);
                 }
             }
+            return $this->render('scelta-ditta',
+                [
+                    'pic' => $pic,
+                    'ulterioriAllegati' => $ulterioriAllegati,
+                    'picPresente' => $picPresente
+                ]
+            );
+
         }
         return $this->render('index');
     }

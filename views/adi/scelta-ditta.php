@@ -8,7 +8,9 @@ use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $pic app\models\AdiPic */
+/* @var $picPresente app\models\AdiPic */
 /* @var $ulterioriAllegati app\models\FileUpload */
+
 
 $this->title = 'ADI - SIAD';
 $this->params['breadcrumbs'][] = "Nuova PIC";
@@ -23,6 +25,31 @@ $this->params['breadcrumbs'][] = $this->title;
         Selezionare la scelta dall'utente, ed eventuali note. <br />
         E' possibile inoltre allegare ulteriori documentazione da allegare al PAI trascinando i file nella sezione "Allegati" (solo file .pdf, dimensione massima <?= ini_get('post_max_size') ?>)
     </div>
+    <?php
+     // if scenario is pic presente
+    if ($pic->scenario === $pic::SCENARIO_PIC_PRESENTE && $picPresente) {
+        // div class success
+        echo "<div class='alert alert-danger' role='alert'>";
+        echo "<h4 class='alert-heading'>PAI presente</h4>";
+        echo "<p>Il paziente ha già un PAI attivo (inizio ".Yii::$app->formatter->asDate($picPresente->inizio). " fine ".Yii::$app->formatter->asDate($picPresente->fine_reale).")  ";
+        // vai al pai
+        echo Html::a('Vai al PAI', ['adi/report', 'id' => $picPresente->id], ['class' => 'btn btn-danger','target' => '_blank']);
+        echo "</p><hr>";
+        echo "<p class='mb-0'><b>Se si continua, il PAI attivo già presente verrà chiuso, in questo caso è necessario indicare la motivazione:</b></p>";
+        // echo options for $pic->motivazione_chiusura, values "SCADENZA" and "RINUNCIA"
+        echo $form->field($pic, 'motivazione_chiusura')->dropDownList(
+                [
+                        'RIATTUALIZZAZIONE' => 'RIATTUALIZZAZIONE nuovo PAI',
+                        'RIMODULAZIONE' => 'RIMODULAZIONE: Rimodulazione del PAI precedente',
+                        'ERRORE' => 'ERRORE: PAI precedente inserito per errore',
+                    'RINUNCIA_ASSISTITO' => 'Rinuncia dell\'assistito',
+                    'RINUNCIA_DITTA' => 'Rinuncia o problema legato alla ditta precedente',
+                    ], ['prompt' => 'Seleziona la motivazione', 'class' => 'form-control', 'style' => 'margin-top: 10px'])->label(false);
+        echo "</div>";
+        // echo button to download file
+    }
+        // div class success
+    ?>
 
     <?php
         // optionselect for ditta

@@ -37,12 +37,13 @@ Icon::map($this);
         // Aggiunge il cerchio di caricamento e disabilita il pulsante
         submitButton.classList.add('button-loading');
         submitButton.disabled = true;
+
+        // Crea il loader e lo aggiunge al pulsante
         var loader = document.createElement('div');
         loader.className = 'loader';
-        submitButton.innerHTML = '<span class="btn-text">' + submitButton.innerHTML + '</span>';
-        submitButton.appendChild(loader);
+        submitButton.appendChild(loader); // Aggiunge il loader alla fine del contenuto del pulsante
 
-
+        // Invia il form
         submitButton.form.submit();
     }
 
