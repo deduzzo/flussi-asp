@@ -90,7 +90,7 @@ class AdiPic extends \yii\db\ActiveRecord
         return [
             'id' => '#',
             'distretto' => 'Distretto',
-            'data_pic' => 'Data Pic',
+            'data_pic' => 'Data PAI',
             'inizio' => 'Inizio',
             'fine' => 'Fine',
             'cartella_aster' => 'Cartella Aster',

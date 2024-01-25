@@ -30,12 +30,12 @@ $this->params['breadcrumbs'][] = $this->title;
     if ($pic->scenario === $pic::SCENARIO_PIC_PRESENTE && $picPresente) {
         // div class success
         echo "<div class='alert alert-danger' role='alert'>";
-        echo "<h4 class='alert-heading'>PAI presente</h4>";
-        echo "<p>Il paziente ha già un PAI attivo (inizio ".Yii::$app->formatter->asDate($picPresente->inizio). " fine ".Yii::$app->formatter->asDate($picPresente->fine_reale).")  ";
-        echo "<p><b>Verificare il pai precedente, e procedere solo se si tratta di un errore, o se si tratta di una rimodulazione o riattualizzazione del PAI precedente.</b>";
-        echo Html::a('Vai al PAI', ['adi/report', 'id' => $picPresente->id], ['class' => 'btn btn-danger','target' => '_blank']);
+        echo "<h4 class='alert-heading'>ATTENZIONE!! PAI attivo già presente</h4>";
+        echo "<p><b>Il paziente ha già un PAI attivo (inizio ".Yii::$app->formatter->asDate($picPresente->inizio). " fine ".Yii::$app->formatter->asDate($picPresente->fine_reale)." scheda ASTER: ".$picPresente->cartella_aster.")  </b>";
+        echo "<p><b>Si prega di verificare il PAI precedente e di procedere soltanto se quello presente è errato oppure si tratta di una rimodulazione o riattualizzazione.</b><br /><br />";
+        echo Html::a('Visualizza il PAI precedente', ['adi/report', 'id' => $picPresente->id], ['class' => 'btn btn-danger','target' => '_blank']);
         echo "</p><hr>";
-        echo "<p class='mb-0'><b>Se si continua, il PAI attivo già presente verrà chiuso, in questo caso è necessario indicare la motivazione:</b></p>";
+        echo "<p class='mb-0'><b>Se si continua, il PAI attivo già presente verrà chiuso. In questo caso è obbligatorio indicare una motivazione:</b></p>";
         // echo options for $pic->motivazione_chiusura, values "SCADENZA" and "RINUNCIA"
         echo $form->field($pic, 'motivazione_chiusura')->dropDownList(
                 [

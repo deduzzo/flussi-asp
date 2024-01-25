@@ -343,18 +343,18 @@ class AdiController extends \yii\web\Controller
                     $picPresente = null;
                 }
             }
-            if ($picPresente)
-                $pic->scenario = AdiPic::SCENARIO_PIC_PRESENTE;
-
+            $motivazione_chiusura = $pic->motivazione_chiusura;
+            $pic->motivazione_chiusura = null;
             if ($pic->validate()) {
                 if ($pic->save()) {
                     if ($picPresente) {
-                        $picPresente->motivazione_chiusura = $pic->motivazione_chiusura;
+                        $picPresente->motivazione_chiusura = $motivazione_chiusura;
                         $picPresente->fine_reale = Carbon::createFromFormat('Y-m-d', $pic->inizio)->subDay()->format('Y-m-d');
                         $picPresente->attivo = false;
+                        $picPresente->save();
+                        $pic->scenario = AdiPic::SCENARIO_SCELTA_DITTA;
                         $pic->motivazione_chiusura = null;
                         $pic->save();
-                        $picPresente->save();
                     }
 
                     $ulterioriAllegati->file = UploadedFile::getInstances($ulterioriAllegati, 'file');
@@ -377,9 +377,9 @@ class AdiController extends \yii\web\Controller
                     $out = $this->inviaPdfAllaDitta($pic,$picPresente);
                     if ($out) {
                         Yii::$app->session->setFlash('success', "Email alla ditta " . $pic->dittaScelta->denominazione . " inviata correttamente");
-                        return $this->redirect(['report', 'id' => $pic->id]);
                     } else
-                        Yii::$app->session->setFlash('error', 'Errore nell\'invio dell\'email');
+                        Yii::$app->session->setFlash('error', 'PAI SALVATO, ma c\'è stato un errore nell\'invio del PAI alla ditta');
+                    return $this->redirect(['report', 'id' => $pic->id]);
                 } else {
                     Yii::$app->session->setFlash('error', 'Errore nel salvataggio dei dati');
                     return $this->render('scelta-ditta', ['pic' => $pic, 'ulterioriAllegati' => $ulterioriAllegati]);
