@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?php
         // optionselect for ditta
-        $ditta = DitteAccreditate::find()->where(['attiva' => true])->all();
+        $ditta = DitteAccreditate::find()->where(['attiva' => true])->orderBy('denominazione')->all();
         $items = [];
         foreach ($ditta as $d) {
             /* @var $d \app\models\DitteAccreditate */
@@ -36,13 +36,13 @@ $this->params['breadcrumbs'][] = $this->title;
         echo "<div class='alert alert-success' role='alert'>";
         echo $form->field($pic, 'ditta_scelta')->dropDownList($items, ['prompt' => 'Seleziona la ditta', 'class' => 'form-control'])->label("Ditta scelta dall'utente:", ['style' => 'font-weight: bold;']);
         // echo note text area
-        echo $form->field($pic, 'note')->textarea(['rows' => 3])->label('Eventuali note da comunicare alla ditta:', ['style' => 'font-weight: bold;']);
+        echo $form->field($pic, 'note')->textarea(['rows' => 3])->label('Eventuali note da inserire nella comunicazione (in caso di distretto di Messina indicare se NORD o SUD):', ['style' => 'font-weight: bold;']);
 
         echo $form->field($ulterioriAllegati, 'file')->widget(FileInput::classname(), [
             'options' => ['multiple' => true],
             'pluginOptions' => [
                 'allowedFileExtensions' => ['pdf'],
-                'dropZoneTitle' => 'Ulteriori file da allegare al file (facoltativi)',
+                'dropZoneTitle' => 'Ulteriori file da allegare alla mail (facoltativi)',
                 'showCaption' => false,
                 'browseLabel' => 'Scegli eventuali allegati (solo .pdf)',
             ]
