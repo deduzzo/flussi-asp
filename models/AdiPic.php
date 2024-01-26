@@ -136,6 +136,17 @@ class AdiPic extends \yii\db\ActiveRecord
         if ($pianoTerapeuticoString) {
             foreach ($pianoTerapeuticoString as $intervento) {
                 $interventoSplitted = explode("\t", $intervento);
+                if (count($interventoSplitted) <3)
+                {
+                    $interventoSplittedTemp0 = $interventoSplitted[0];
+                    $interventoSplitted[0] = substr($interventoSplitted[0], 0, 21);
+                    $interventoSplittedTemp1 = substr($interventoSplittedTemp0, 21, strlen($interventoSplittedTemp0) - 21);
+                    $interventoSplittedNew = [];
+                    $interventoSplittedNew[] = $interventoSplitted[0];
+                    $interventoSplittedNew[] = $interventoSplittedTemp1;
+                    $interventoSplittedNew[] = $interventoSplitted[1];
+                    $interventoSplitted = $interventoSplittedNew;
+                }
                 for ($i = 0; $i < count($interventoSplitted); $i++) {
                     if ($i === 0) {
                         $outString .= "DA/A: " . str_replace(" ", "-", $interventoSplitted[$i]);
