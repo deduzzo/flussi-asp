@@ -53,7 +53,7 @@ class Utils
             } else {
                 $rigaTemp = substr($text1[$i], 0, 21) . "\t";
                 $rigaTemp .= substr($text1[$i], 21, strlen($text1[$i]) - 21);
-                while ((substr($text1[$i + 1], 2, 1) !== "/" && (substr($text1[$i + 1], strlen($text1[$i + 1]) -5 , 4) !== "onal")) || $i == $posFine - 1) {
+                while ((substr($text1[$i + 1], 2, 1) !== "/" && (substr($text1[$i + 1], strlen($text1[$i + 1]) -5 , 4) !== "onal")) && ($i < $posFine - 1)) {
                     $rigaTemp .= " " . $text1[$i + 1];
                     $i++;
                 }
