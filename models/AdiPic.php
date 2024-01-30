@@ -153,8 +153,8 @@ class AdiPic extends \yii\db\ActiveRecord
                         if (is_null($da) && is_null($a)) {
                             $daA = explode(" ", $interventoSplitted[$i]);
                             // import from carbon
-                            $da =$daA[0];
-                            $a = $daA[1];
+                            $da = substr($daA[0],0,10);
+                            $a = substr($daA[1],0,10);
                         }
                     } else if ($i === count($interventoSplitted) - 1)
                         $outString .= " - FREQUENZA: $interventoSplitted[$i]";
