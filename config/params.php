@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'adminEmail' => 'pazientefragile@asp.messina.it',
+    'adminEmail' => 'pua.centralizzato@asp.messina.it',
     'ccEmail' => 'roberto.dedomenico@asp.messina.it',
     'bsVersion' => '5',
     'uploadPath' => dirname(__DIR__) . DIRECTORY_SEPARATOR. 'uploads',
