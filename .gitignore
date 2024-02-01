@@ -38,5 +38,5 @@ tests/_support/_generated
 /uploads/*
 /web/assets/*
 /web/index.php
-/config/db.php
+/config/db*
 /config/mail.php
