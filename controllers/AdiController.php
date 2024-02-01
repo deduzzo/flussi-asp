@@ -200,13 +200,13 @@ class AdiController extends \yii\web\Controller
                     <td colspan='5' style='padding-top: 10px'>$pic->recapiti</td>
                   </tr>
                   <tr>
-                    <td colspan='1' style='padding-top: 10px'><b>Medico<br /> dichiarato</b></td>
+                    <td colspan='1' style='padding-top: 10px'><b>Medico curante dichiarato</b></td>
                     <td colspan='5' style='padding-top: 10px'>$pic->medico_curante</td>
-                    <td colspan='1' style='padding-top: 10px'><b>Medico <br /> dichiarato</b></td>
+                    <td colspan='1' style='padding-top: 10px'><b>Medico prescrittore dichiarato</b></td>
                     <td colspan='5' style='padding-top: 10px'>$pic->medico_prescrittore</td>
                   </tr>
                   <tr>
-                    <td colspan='1' style='padding-top: 10px'><b>Medico<br /> rilevato</b></td>
+                    <td colspan='1' style='padding-top: 10px'><b>MMG assistito</b></td>
                     <td colspan='5' style='padding-top: 10px'>$pic->medico_curante</td>
                   </tr>
                   <tr>
@@ -252,7 +252,7 @@ class AdiController extends \yii\web\Controller
             mkdir(Yii::$app->params['tempPath'], 0777, true);
         $pdf->Output(Yii::$app->params['tempPath'] . "$random.pdf", 'F');
 
-        $oggettoMail = "[" . $pic->distretto . "] - PAI - " . $pic->cognome . " " . $pic->nome . " " . $pic->cf . ($picPrecedente ? (" - [NUOVO, A SEGUITO DI " . $picPrecedente->motivazione_chiusura . "]") : "") . " - " . $pic->dittaScelta->denominazione;
+        $oggettoMail = "[" . $pic->distretto . "] PAI - " . $pic->cognome . " " . $pic->nome . " " . $pic->cf . ($picPrecedente ? (" [NUOVO, A SEGUITO DI " . $picPrecedente->motivazione_chiusura . "]") : "") . " - " . $pic->dittaScelta->denominazione;
 
         $distrettiString = 'Messina NORD  -  <a href="mailto:adi.menord@asp.messina.it?subject=' . rawurlencode("CONFERMA RICEZIONE " . $oggettoMail) . '">adi.menord@asp.messina.it</a><br />
                     Messina SUD  -  <a href="mailto:adi.mesud@asp.messina.it?subject=' . rawurlencode("CONFERMA RICEZIONE " . $oggettoMail) . '">adi.mesud@asp.messina.it</a><br />
