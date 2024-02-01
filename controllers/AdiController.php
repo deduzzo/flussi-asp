@@ -253,7 +253,7 @@ class AdiController extends \yii\web\Controller
         $pdf->Output(Yii::$app->params['tempPath'] . "$random.pdf", 'F');
 
         $dist = "[" . $pic->distretto . "]";
-        $oggettoMail = " PAI - " . $pic->cognome . " " . $pic->nome . " " . $pic->cf . " #Aster: ".$pic->cartella_aster. ($picPrecedente ? (" [NUOVO, A SEGUITO DI " . $picPrecedente->motivazione_chiusura . "]") : "") . " - " . $pic->dittaScelta->denominazione;
+        $oggettoMail = " PAI - " . $pic->cognome . " " . $pic->nome . " " . $pic->cf . " #Aster: ".$pic->cartella_aster. ($picPrecedente ? (" [NUOVO, MOTIVO: " . $picPrecedente->motivazione_chiusura . "]") : "") . " - " . $pic->dittaScelta->denominazione;
 
         $distrettiString = 'Messina NORD  -  <a href="mailto:adi.menord@asp.messina.it?subject=' . rawurlencode("CONFERMA RICEZIONE " . $oggettoMail) . '">adi.menord@asp.messina.it</a><br />
                     Messina SUD  -  <a href="mailto:adi.mesud@asp.messina.it?subject=' . rawurlencode("CONFERMA RICEZIONE " . $oggettoMail) . '">adi.mesud@asp.messina.it</a><br />
