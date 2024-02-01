@@ -93,15 +93,18 @@ class AdiController extends \yii\web\Controller
                         $newPic->distretto = $dati['distretto'];
                         $newPic->id_utente = Yii::$app->user->identity->username;
                         $out = "Non presente nei sistemi";
-                        $assistito = Assistito::find()->where(['codice_fiscale' => $dati['cf']])->one();
-                        if ($assistito) {
-                            if ($assistito->codice_regionale_ts && $assistito->codice_regionale_nar && ($assistito->codice_regionale_ts === $assistito->codice_regionale_nar))
-                                $out = "rilevato su NAR e TS: " . $assistito->medicoNar->nominativo . " - ambito: " . strtoupper($assistito->medicoNar->distretto);
-                            else if ($assistito->codice_regionale_nar)
-                                $out = "rilevato su NAR: " . $assistito->medicoNar->nominativo . " - ambito: " . strtoupper($assistito->medicoNar->distretto);
-                            else if ($assistito->codice_regionale_ts)
-                                $out = "rilevato su TS: " . $assistito->medicoTs->nominativo . " - ambito: " . strtoupper($assistito->medicoTs->distretto);
+                        try {
+                            $assistito = Assistito::find()->where(['codice_fiscale' => $dati['cf']])->one();
+                            if ($assistito) {
+                                if ($assistito->codice_regionale_ts && $assistito->codice_regionale_nar && ($assistito->codice_regionale_ts === $assistito->codice_regionale_nar))
+                                    $out = "rilevato su NAR e TS: " . $assistito->medicoNar->nominativo . " - ambito: " . strtoupper($assistito->medicoNar->distretto);
+                                else if ($assistito->codice_regionale_nar)
+                                    $out = "rilevato su NAR: " . $assistito->medicoNar->nominativo . " - ambito: " . strtoupper($assistito->medicoNar->distretto);
+                                else if ($assistito->codice_regionale_ts)
+                                    $out = "rilevato su TS: " . $assistito->medicoTs->nominativo . " - ambito: " . strtoupper($assistito->medicoTs->distretto);
+                            }
                         }
+                        catch (\yii\db\Exception $e) {}
                         $newPic->medico_rilevato = $out;
 
                     } catch (\Exception $e) {
