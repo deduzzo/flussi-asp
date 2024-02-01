@@ -105,7 +105,11 @@ class AdiController extends \yii\web\Controller
                         $newPic->medico_rilevato = $out;
 
                     } catch (\Exception $e) {
-                        Yii::$app->session->setFlash('error', 'Sistema MOMENTANEAMENTE non disponibile per aggiornamenti, riprovare a breve.');
+                        $aggiornamento = true;
+                        if ($aggiornamento)
+                            Yii::$app->session->setFlash('info', 'Errore nel reperire i dati dal file caricato');
+                        else
+                            Yii::$app->session->setFlash('error', 'Sistema MOMENTANEAMENTE non disponibile per aggiornamenti, riprovare a breve.');
                         return $this->render('nuova', [
                             'model' => $model,
                         ]);
