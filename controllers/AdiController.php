@@ -110,6 +110,7 @@ class AdiController extends \yii\web\Controller
                             Yii::$app->session->setFlash('info', '<b>Sistema MOMENTANEAMENTE non disponibile per aggiornamenti, riprovare a breve.</b>');
                         else
                             Yii::$app->session->setFlash('error', 'Errore nel reperire i dati dal file caricato');
+                        echo $e;
                         return $this->render('nuova', [
                             'model' => $model,
                         ]);
