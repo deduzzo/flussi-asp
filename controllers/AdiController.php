@@ -107,9 +107,9 @@ class AdiController extends \yii\web\Controller
                     } catch (\Exception $e) {
                         $aggiornamento = true;
                         if ($aggiornamento)
-                            Yii::$app->session->setFlash('info', 'Errore nel reperire i dati dal file caricato');
+                            Yii::$app->session->setFlash('info', '<b>Sistema MOMENTANEAMENTE non disponibile per aggiornamenti, riprovare a breve.Errore nel reperire i dati dal file caricato</b>');
                         else
-                            Yii::$app->session->setFlash('error', 'Sistema MOMENTANEAMENTE non disponibile per aggiornamenti, riprovare a breve.');
+                            Yii::$app->session->setFlash('error', 'Errore nel reperire i dati dal file caricato');
                         return $this->render('nuova', [
                             'model' => $model,
                         ]);
