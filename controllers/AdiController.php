@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\AdiPicSearch;
+use app\models\Assistito;
 use app\models\utils\SymfonyMailerComponent;
 use app\models\AdiPic;
 use app\models\FileUpload;
@@ -91,6 +92,18 @@ class AdiController extends \yii\web\Controller
                         $newPic->data_ora_invio = date('Y-m-d H:i:s');
                         $newPic->distretto = $dati['distretto'];
                         $newPic->id_utente = Yii::$app->user->identity->username;
+                        $out = "Non presente nei sistemi";
+                        $assistito = Assistito::find()->where(['codice_fiscale' => $dati['cf']])->one();
+                        if ($assistito) {
+                            if ($assistito->codice_regionale_ts && $assistito->codice_regionale_nar && ($assistito->codice_regionale_ts === $assistito->codice_regionale_nar))
+                                $out = "Rilevato su NAR e TS: " . $assistito->medicoNar->nominativo . " - Distretto: " . strtoupper($assistito->medicoNar->distretto);
+                            else if ($assistito->codice_regionale_nar)
+                                $out = "Rilevato su NAR: " . $assistito->medicoNar->nominativo . " - Distretto: " . strtoupper($assistito->medicoNar->distretto);
+                            else if ($assistito->codice_regionale_ts)
+                                $out = "Rilevato su TS: " . $assistito->medicoTs->nominativo . " - Distretto: " . strtoupper($assistito->medicoTs->distretto);
+                        }
+                        $newPic->medico_rilevato = $out;
+
                     } catch (\Exception $e) {
                         Yii::$app->session->setFlash('error', 'Errore nel reperire i dati dal file caricato');
                         return $this->render('nuova', [
@@ -125,82 +138,84 @@ class AdiController extends \yii\web\Controller
                     text-align: left; /* Aligns text to the left in all table cells */
                   }
                 </style>
+                <title></title>
                 </head>
                 <body>
                 <div class='container'>
                   <table style='border: 0;'>
                   <tr>
-                    <td rowspan='2' colspan='6'>
-                        <img src='$alias/static/images/asp-messina.jpg' alt='ASP Messina' class='logo'>
+                    <td rowspan='2' colspan='1'>
+                        <img src='$alias/static/images/asp-messina.jpg' alt='ASP Messina' class='logo' style='height: 100px; width: auto'>
                     </td>
-                    <td style='text-align: center; padding-top: 40px' colspan='6'>
+                    <td style='text-align: center; padding-top: 40px' colspan='11'>
                       <p>SPORTELLO UNICO DI ACCESSO ALLE CURE DOMICILIARI</p>
                       <p class='underline' style='padding-top: 5px'><b>$pic->distretto</b></p>
                     </td>
                   </tr>
                   <tr>
-                    <td style='text-align: center' colspan='6'>
-                        <h2>Piano Assistenza Individualizzato</h2>
+                    <td style='text-align: center; color: red' colspan='12'>
+                        <h2>PIANO ASSISTENZA INDIVIDUALIZZATO (PAI)</h2>
                     </td>
                   </tr>
                   <tr>
-                    <td colspan='1' style='padding-top: 3px'><b>Data</b></td>
-                    <td colspan='3' style='padding-top: 3px'>" . Yii::$app->formatter->asDate($pic->data_pic) . "</td>
-                    <td colspan='1' style='padding-top: 3px'><b>Inizio:</b></td>
-                    <td colspan='3' style='padding-top: 3px'>" . Yii::$app->formatter->asDate($pic->inizio) . "</td>
-                    <td colspan='1' style='padding-top: 3px'><b>Fine:</b></td>
-                    <td colspan='3' style='padding-top: 3px'>" . Yii::$app->formatter->asDate($pic->fine) . "</td>
+                    <td colspan='1' style='padding-top: 20px'><b>Data</b></td>
+                    <td colspan='4' style='padding-top: 20px'>" . Yii::$app->formatter->asDate($pic->data_pic) . "</td>
+                    <td colspan='1' style='padding-top: 20px'><b>Inizio</b></td>
+                    <td colspan='3' style='padding-top: 20px; color: red'><b>" . Yii::$app->formatter->asDate($pic->inizio) . "</b></td>
+                    <td colspan='1' style='padding-top: 20px'><b>Fine</b></td>
+                    <td colspan='2' style='padding-top: 20px; color: red'><b>" . Yii::$app->formatter->asDate($pic->fine) . "</b></td>
                   </tr>
                   <tr>
-                    <td colspan='1' style='padding-top: 3px'><b>Cartella<br /> ASTER</b></td>
-                    <td colspan='5' style='padding-top: 3px'>$pic->cartella_aster</td>
-                    <td colspan='1' style='padding-top: 3px'><b>Num Contatto:</b></td>
-                    <td colspan='5' style='padding-top: 3px'>" . $pic->num_contatto . "</td>
+                   <td colspan='1' style='padding-top: 10px'><b>Cod. Ficale</b></td>
+                    <td colspan='4' style='padding-top: 10px'>$pic->cf</td>
+                    <td colspan='1' style='padding-top: 10px'><b>n°ASTER</b></td>
+                    <td colspan='3' style='padding-top: 10px'>$pic->cartella_aster</td>
+                    <td colspan='1' style='padding-top: 10px'><b>n° cont</b></td>
+                    <td colspan='2' style='padding-top: 10px'>" . $pic->num_contatto . "</td>
                   </tr>
                   <tr>
-                    <td colspan='1' style='padding-top: 3px'><b>Codice<br /> Fiscale</b></td>
-                    <td colspan='11' style='padding-top: 3px'>$pic->cf</td>
-                    </tr>
-                  <tr>
-                    <td colspan='1' style='padding-top: 3px'><b>Cognome</b></td>
-                    <td colspan='5' style='padding-top: 3px'>$pic->cognome</td>
-                    <td colspan='1' style='padding-top: 3px'><b>Nome</b></td>
-                    <td colspan='5' style='padding-top: 3px'>$pic->nome</td>
+                    <td colspan='1' style='padding-top: 10px'><b>Cognome</b></td>
+                    <td colspan='5' style='padding-top: 10px; color: blue'><b>$pic->cognome</b></td>
+                    <td colspan='1' style='padding-top: 10px'><b>Nome</b></td>
+                    <td colspan='5' style='padding-top: 10px; color: blue'><b>$pic->nome</b></td>
                   </tr>
                   <tr>
-                    <td colspan='1' style='padding-top: 3px'><b>Nato a</b></td>
-                    <td colspan='5' style='padding-top: 3px'>$pic->dati_nascita</td>
-                    <td colspan='1' style='padding-top: 3px'><b>Residenza</b></td>
-                    <td colspan='5' style='padding-top: 3px'>$pic->dati_residenza</td>
+                    <td colspan='1' style='padding-top: 10px'><b>Nato a</b></td>
+                    <td colspan='5' style='padding-top: 10px'>$pic->dati_nascita</td>
+                    <td colspan='1' style='padding-top: 10px'><b>Residenza</b></td>
+                    <td colspan='5' style='padding-top: 10px'>$pic->dati_residenza</td>
                   </tr>
                   <tr>
-                    <td colspan='1' style='padding-top: 3px'><b>Domiciliato a</b></td>
-                    <td colspan='5' style='padding-top: 3px'>$pic->dati_domicilio</td>
-                    <td colspan='1' style='padding-top: 3px'><b>Recapiti</b></td>
-                    <td colspan='5' style='padding-top: 3px'>$pic->recapiti</td>
+                    <td colspan='1' style='padding-top: 10px'><b>Domiciliato a</b></td>
+                    <td colspan='5' style='padding-top: 10px'>$pic->dati_domicilio</td>
+                    <td colspan='1' style='padding-top: 10px'><b>Recapiti</b></td>
+                    <td colspan='5' style='padding-top: 10px'>$pic->recapiti</td>
                   </tr>
                   <tr>
-                    <td colspan='1' style='padding-top: 3px'><b>Medico<br /> curante</b></td>
-                    <td colspan='5' style='padding-top: 3px'>$pic->medico_curante</td>
-                    <td colspan='1' style='padding-top: 3px'><b>Medico <br />prescrittore</b></td>
-                    <td colspan='5' style='padding-top: 3px'>$pic->medico_prescrittore</td>
+                    <td colspan='1' style='padding-top: 10px'><b>Medico<br /> dichiarato</b></td>
+                    <td colspan='5' style='padding-top: 10px'>$pic->medico_curante</td>
+                    <td colspan='1' style='padding-top: 10px'><b>Medico <br /> dichiarato</b></td>
+                    <td colspan='5' style='padding-top: 10px'>$pic->medico_prescrittore</td>
                   </tr>
                   <tr>
-                    <td colspan='1' style='padding-top: 3px'><b>Diagnosi</b></td>
-                    <td colspan='11' style='padding-top: 3px'>$pic->diagnosi</td>
+                    <td colspan='1' style='padding-top: 10px'><b>Medico<br /> rilevato</b></td>
+                    <td colspan='5' style='padding-top: 10px'>$pic->medico_curante</td>
                   </tr>
                   <tr>
-                    <td colspan='12' style='padding-top: 3px'><b>Piano terapeutico</b></td></tr>
-                    <tr>
+                    <td colspan='1' style='padding-top: 10px'><b>Diagnosi</b></td>
+                    <td colspan='11' style='padding-top: 10px'>$pic->diagnosi</td>
+                  </tr>
+                  <tr>
+                    <td colspan='12' style='padding-top: 10px'><b>PIANO TERAPEUTICO:</b></td></tr>
+                 <tr>
                     <td colspan='12' style='padding-top: 5px'>$terapia</td>
                   </tr>
                   <tr>
-                    <td colspan='12' style='padding-top: 3px'><b>DITTA PRESCELTA:</b></td></tr>
-                    <tr>
-                    <td colspan='12' style='padding-top: 5px; color: red'><h2>" . $pic->dittaScelta->denominazione . "</h2></td>
+                    <td colspan='2' style='padding-top: 10px'><b>DITTA PRESCELTA:</b></td>
+                    <td colspan='10' style='padding-top: 10px; color: red'><h2>" . $pic->dittaScelta->denominazione . "</h2></td>
                   </tr>
                   <tr>
-                    <td colspan='12' style='padding-top: 20px'><b>EVENTUALI NOTE:</b></td></tr>
+                    <td colspan='12' style='padding-top: 10px'><b>EVENTUALI NOTE:</b></td></tr>
                     <tr>
                     <td colspan='12' style='padding-top: 5px'>" . $pic->note . "</td>
                   </tr>
@@ -229,7 +244,7 @@ class AdiController extends \yii\web\Controller
             mkdir(Yii::$app->params['tempPath'], 0777, true);
         $pdf->Output(Yii::$app->params['tempPath'] . "$random.pdf", 'F');
 
-        $oggettoMail =  "[". $pic->distretto."] - nuovo PAI " . $pic->cognome . " ". $pic->nome ." (". $pic->cf .")"  .($picPrecedente ? (" - [NUOVO, A SEGUITO DI ".$picPrecedente->motivazione_chiusura."]") : "") . " - " . $pic->dittaScelta->denominazione;
+        $oggettoMail = "[" . $pic->distretto . "] - PAI " . $pic->cognome . " " . $pic->nome . " (" . $pic->cf . ")" . ($picPrecedente ? (" - [NUOVO, A SEGUITO DI " . $picPrecedente->motivazione_chiusura . "]") : "") . " - " . $pic->dittaScelta->denominazione;
 
         $distrettiString = 'Messina NORD  -  <a href="mailto:adi.menord@asp.messina.it?subject=' . rawurlencode("CONFERMA RICEZIONE " . $oggettoMail) . '">adi.menord@asp.messina.it</a><br />
                     Messina SUD  -  <a href="mailto:adi.mesud@asp.messina.it?subject=' . rawurlencode("CONFERMA RICEZIONE " . $oggettoMail) . '">adi.mesud@asp.messina.it</a><br />
@@ -244,8 +259,10 @@ class AdiController extends \yii\web\Controller
             $altriFileDaAllegare = glob(Yii::$app->params['uploadPath'] . DIRECTORY_SEPARATOR . $pic->id . DIRECTORY_SEPARATOR . '*');
             $utente = str_replace("@asp.messina.it", "", $pic->id_utente);
             $message = Yii::$app->mailer->compose()->setHtmlBody(
-                "In data " . Yii::$app->formatter->asDate($pic->data_pic) . " l'utente " . $utente . " ha inserito un PAI a voi assegnato:<br /><br /> $pic->cognome $pic->nome con CF $pic->cf. <br /><br /> In allegato il PAI (e gli eventuali allegati).<br /><br />" .
-                ($picPrecedente ? ("<b>ATTENZIONE: il PAI precedente è stato chiuso in data ".Yii::$app->formatter->asDate($picPrecedente->fine_reale)." con motivazione: <i>" . $picPrecedente->motivazione_chiusura . "</i></b><br /><br />") : "").
+                "In data " . Yii::$app->formatter->asDate($pic->data_pic) . " l'utente " . $utente . " ha inserito un PAI a voi assegnato:<br /><br /> $pic->cognome $pic->nome con CF $pic->cf. <br /><br />".
+                ("<br /><b>Medico di base dell'assistito:</b>".$pic->medico_rilevato."<br /><br />") .
+                " In allegato il PAI (e gli eventuali allegati).<br /><br />" .
+                ($picPrecedente ? ("<b>ATTENZIONE: il PAI precedente è stato chiuso in data " . Yii::$app->formatter->asDate($picPrecedente->fine_reale) . " con motivazione: <i>" . $picPrecedente->motivazione_chiusura . "</i></b><br /><br />") : "") .
                 ($pic->note ? "<b>NOTE:</b><br />" . $pic->note . "<br /><br />" : "") .
                 ((count($altriFileDaAllegare) > 0) ? "<b> SONO PRESENTI ALLEGATI AGGIUNTIVI, si prega di prendere visione<br /><br /></b>" : "") .
                 "<b>Si prega di inviare conferma via mail al servizio ADI distrettuale di competenza utilizzando (se possibile) uno dei link in basso:</b><br /><br />"
@@ -374,7 +391,7 @@ class AdiController extends \yii\web\Controller
                     }
 
                     Yii::$app->session->setFlash('success', 'Dati salvati correttamente');
-                    $out = $this->inviaPdfAllaDitta($pic,$picPresente);
+                    $out = $this->inviaPdfAllaDitta($pic, $picPresente);
                     if ($out) {
                         Yii::$app->session->setFlash('success', "Email alla ditta " . $pic->dittaScelta->denominazione . " inviata correttamente");
                     } else

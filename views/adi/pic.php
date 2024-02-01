@@ -25,6 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
         Si prega di verificare i dati prima di inviare la presa in carico.
     </div>
     <?= $form->field($pic, 'nome_file')->hiddenInput()->label(false) ?>
+    <?= $form->field($pic, 'medico_rilevato')->hiddenInput()->label(false) ?>
     <!-- fieldset with text dati pic -->
     <div class="form-group">
         <fieldset>

@@ -27,6 +27,7 @@ use yii\helpers\Json;
  * @property string|null $recapiti
  * @property string|null $medico_curante
  * @property string|null $medico_prescrittore
+ * @property string|null $medico_rilevato
  * @property string|null $diagnosi
  * @property string|null $piano_terapeutico
  * @property string|null $nome_file
@@ -73,7 +74,7 @@ class AdiPic extends \yii\db\ActiveRecord
             [['piano_terapeutico', 'note','motivazione_chiusura'], 'string'],
             [['attivo'], 'boolean'],
             [['num_contatto', 'ditta_scelta'], 'integer'],
-            [['distretto', 'cartella_aster', 'cf', 'cognome', 'nome', 'dati_nascita', 'dati_domicilio', 'recapiti', 'medico_curante', 'medico_prescrittore', 'nome_file'], 'string', 'max' => 100],
+            [['distretto', 'cartella_aster', 'cf', 'cognome', 'nome', 'dati_nascita', 'dati_domicilio', 'recapiti', 'medico_curante', 'medico_prescrittore','medico_rilevato', 'nome_file'], 'string', 'max' => 100],
             [['dati_residenza'], 'string', 'max' => 200],
             [['diagnosi'], 'string', 'max' => 1000],
             [['id_utente'], 'string', 'max' => 50],
@@ -105,6 +106,7 @@ class AdiPic extends \yii\db\ActiveRecord
             'recapiti' => 'Recapiti',
             'medico_curante' => 'Medico Curante',
             'medico_prescrittore' => 'Medico Prescrittore',
+            'medico_rilevato' => 'Medico Rilevato',
             'diagnosi' => 'Diagnosi',
             'piano_terapeutico' => 'Piano Terapeutico (da/a - intervento - frequenza)',
             'nome_file' => 'Nome File',

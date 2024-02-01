@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Assistito;
 use app\models\DitteAccreditate;
 use kartik\file\FileInput;
 use yii\bootstrap5\ActiveForm;
@@ -19,68 +20,69 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
 <div>
-        <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
+    <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
     <div class="alert alert-info" role="alert">
-        Selezionare la scelta dall'utente, ed eventuali note. <br />
-        E' possibile inoltre allegare ulteriori documentazione da allegare al PAI trascinando i file nella sezione "Allegati" (solo file .pdf, dimensione massima <?= ini_get('post_max_size') ?>)
+        Selezionare la scelta dall'utente, ed eventuali note. <br/>
+        E' possibile inoltre allegare ulteriori documentazione da allegare al PAI trascinando i file nella sezione
+        "Allegati" (solo file .pdf, dimensione massima <?= ini_get('post_max_size') ?>)
     </div>
     <?php
-     // if scenario is pic presente
+    // if scenario is pic presente
     if ($pic->scenario === $pic::SCENARIO_PIC_PRESENTE && $picPresente) {
         // div class success
         echo "<div class='alert alert-danger' role='alert'>";
         echo "<h4 class='alert-heading'>ATTENZIONE!! PAI attivo già presente</h4>";
-        echo "<p><b>Il paziente ha già un PAI attivo (inizio ".Yii::$app->formatter->asDate($picPresente->inizio). " fine ".Yii::$app->formatter->asDate($picPresente->fine_reale)." scheda ASTER: ".$picPresente->cartella_aster." inserito da ".str_replace("@asp.messina.it","",$picPresente->id_utente).")  </b>";
-        echo "<p><b>Si prega di verificare il PAI precedente e di procedere SOLTANTO se quello presente è errato oppure si tratta di una rimodulazione o riattualizzazione.<br /> In caso contrario ".Html::a('basta tornare alla home cliccando qui.', ['adi/index'])."</b><br /><br />";
-        echo Html::a('Visualizza il PAI precedente', ['adi/report', 'id' => $picPresente->id], ['class' => 'btn btn-danger','target' => '_blank']);
+        echo "<p><b>Il paziente ha già un PAI attivo (inizio " . Yii::$app->formatter->asDate($picPresente->inizio) . " fine " . Yii::$app->formatter->asDate($picPresente->fine_reale) . " scheda ASTER: " . $picPresente->cartella_aster . " inserito da " . str_replace("@asp.messina.it", "", $picPresente->id_utente) . ")  </b>";
+        echo "<p><b>Si prega di verificare il PAI precedente e di procedere SOLTANTO se quello presente è errato oppure si tratta di una rimodulazione o riattualizzazione.<br /> In caso contrario " . Html::a('basta tornare alla home cliccando qui.', ['adi/index']) . "</b><br /><br />";
+        echo Html::a('Visualizza il PAI precedente', ['adi/report', 'id' => $picPresente->id], ['class' => 'btn btn-danger', 'target' => '_blank']);
         // echo link to return home
         echo "</p><hr>";
         echo "<p class='mb-0'><b>Se si continua, il PAI attivo già presente verrà chiuso. In questo caso è obbligatorio indicare una motivazione:</b></p>";
         // echo options for $pic->motivazione_chiusura, values "SCADENZA" and "RINUNCIA"
         echo $form->field($pic, 'motivazione_chiusura')->dropDownList(
-                [
-                        'RIATTUALIZZAZIONE' => 'RIATTUALIZZAZIONE nuovo PAI',
-                        'RIMODULAZIONE' => 'RIMODULAZIONE: Rimodulazione del PAI precedente',
-                        'ERRORE' => 'ERRORE: PAI precedente inserito per errore',
-                    'CAMBIO_DITTA_ASSISTITO' => 'CAMBIO DITTA: L\'assistito ha deciso di cambiare ditta fornitrice',
-                    'RINUNCIA_ASSISTITO' => 'RINUNCIA ASSISTITO: Rinuncia dell\'assistito',
-                    'RINUNCIA_DITTA' => 'PROBLEMA DITTA: Rinuncia o problema legato alla ditta precedente',
-                    ], ['prompt' => 'Seleziona la motivazione', 'class' => 'form-control', 'style' => 'margin-top: 10px'])->label(false);
+            [
+                'RIATTUALIZZAZIONE' => 'RIATTUALIZZAZIONE nuovo PAI',
+                'RIMODULAZIONE' => 'RIMODULAZIONE: Rimodulazione del PAI precedente',
+                'ERRORE' => 'ERRORE: PAI precedente inserito per errore',
+                'CAMBIO_DITTA_ASSISTITO' => 'CAMBIO DITTA: L\'assistito ha deciso di cambiare ditta fornitrice',
+                'RINUNCIA_ASSISTITO' => 'RINUNCIA ASSISTITO: Rinuncia dell\'assistito',
+                'RINUNCIA_DITTA' => 'PROBLEMA DITTA: Rinuncia o problema legato alla ditta precedente',
+            ], ['prompt' => 'Seleziona la motivazione', 'class' => 'form-control', 'style' => 'margin-top: 10px'])->label(false);
         echo "</div>";
         // echo button to download file
     }
-        // div class success
+    // div class success
     ?>
 
     <?php
-        // optionselect for ditta
-        $ditta = DitteAccreditate::find()->where(['attiva' => true])->all();
-        $items = [];
-        foreach ($ditta as $d) {
-            /* @var $d \app\models\DitteAccreditate */
-            $items[$d->id] = $d->getDescrDitta();
-        }
-        // div class success
-        echo "<div class='alert alert-success' role='alert'>";
-        echo $form->field($pic, 'ditta_scelta')->dropDownList($items, ['prompt' => 'Seleziona la ditta', 'class' => 'form-control'])->label("Ditta scelta dall'utente:", ['style' => 'font-weight: bold;']);
-        // echo note text area
-        echo $form->field($pic, 'note')->textarea(['rows' => 3])->label('Eventuali note da inserire nella comunicazione (in caso di distretto di Messina indicare se NORD o SUD):', ['style' => 'font-weight: bold;']);
+    // optionselect for ditta
+    $ditta = DitteAccreditate::find()->where(['attiva' => true])->all();
+    $items = [];
+    foreach ($ditta as $d) {
+        /* @var $d \app\models\DitteAccreditate */
+        $items[$d->id] = $d->getDescrDitta();
+    }
+    // div class success
+    echo "<div class='alert alert-success' role='alert'>";
+    echo $form->field($pic, 'ditta_scelta')->dropDownList($items, ['prompt' => 'Seleziona la ditta', 'class' => 'form-control'])->label("Ditta scelta dall'utente:", ['style' => 'font-weight: bold;']);
+    // echo note text area
+    echo $form->field($pic, 'note')->textarea(['rows' => 3])->label('Eventuali note da inserire nella comunicazione (in caso di distretto di Messina indicare se NORD o SUD):', ['style' => 'font-weight: bold;']);
 
-        echo $form->field($ulterioriAllegati, 'file')->widget(FileInput::classname(), [
-            'options' => ['multiple' => true],
-            'pluginOptions' => [
-                'allowedFileExtensions' => ['pdf'],
-                'dropZoneTitle' => 'Ulteriori file da allegare alla mail (facoltativi)',
-                'showCaption' => false,
-                'browseLabel' => 'Scegli eventuali allegati (solo .pdf)',
-            ]
-        ]);
-            echo "<div class='text-center'>";
-            echo Html::submitButton('Conferma PIC e assegna alla ditta selezionata', ['class' => 'btn btn-success',"id" => "subBtn", "onclick" => "handleClick(this.id)"]);
-            echo "</div>";
+    echo $form->field($ulterioriAllegati, 'file')->widget(FileInput::classname(), [
+        'options' => ['multiple' => true],
+        'pluginOptions' => [
+            'allowedFileExtensions' => ['pdf'],
+            'dropZoneTitle' => 'Ulteriori file da allegare alla mail (facoltativi)',
+            'showCaption' => false,
+            'browseLabel' => 'Scegli eventuali allegati (solo .pdf)',
+        ]
+    ]);
+    echo "<div class='text-center'>";
+    echo Html::submitButton('Conferma PIC e assegna alla ditta selezionata', ['class' => 'btn btn-success', "id" => "subBtn", "onclick" => "handleClick(this.id)"]);
+    echo "</div>";
 
-        echo "</div>";
+    echo "</div>";
     ?>
 
     <?= $form->field($pic, 'nome')->hiddenInput()->label(false) ?>
@@ -126,6 +128,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
                 <div class="col-md-2">
                     <?= $form->field($pic, 'fine_reale')->textInput(['maxlength' => true, 'disabled' => true]) ?>
+                </div>
+                <div class="col-md-6">
+                    <?= $form->field($pic, 'medico_rilevato')->textInput(['maxlength' => true, 'disabled' => true]) ?>
+                </div>
+                <div class="col-md-3">
+                    <?= $form->field($pic, 'medico_curante')->textInput(['maxlength' => true, 'disabled' => true]) ?>
+                </div>
+                <div class="col-md-3">
+                    <?= $form->field($pic, 'medico_prescrittore')->textInput(['maxlength' => true, 'disabled' => true]) ?>
                 </div>
                 <div class="col-md-12">
                     <?= $form->field($pic, 'diagnosi')->textarea(['rows' => 2, 'disabled' => true]) ?>
