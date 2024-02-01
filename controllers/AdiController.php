@@ -92,7 +92,7 @@ class AdiController extends \yii\web\Controller
                         $newPic->data_ora_invio = date('Y-m-d H:i:s');
                         $newPic->distretto = $dati['distretto'];
                         $newPic->id_utente = Yii::$app->user->identity->username;
-                        $out = "Non presente nei sistemi";
+                        $out = "non presente nei sistemi";
                         try {
                             $assistito = Assistito::find()->where(['codice_fiscale' => $dati['cf']])->one();
                             if ($assistito) {
