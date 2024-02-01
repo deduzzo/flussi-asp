@@ -103,8 +103,8 @@ class AdiController extends \yii\web\Controller
                                 else if ($assistito->codice_regionale_ts)
                                     $out = "rilevato su TS: " . $assistito->medicoTs->nominativo . " - ambito: " . strtoupper($assistito->medicoTs->distretto);
                             }
+                        } catch (\yii\db\Exception $e) {
                         }
-                        catch (\yii\db\Exception $e) {}
                         $newPic->medico_rilevato = $out;
 
                     } catch (\Exception $e) {
@@ -252,7 +252,8 @@ class AdiController extends \yii\web\Controller
             mkdir(Yii::$app->params['tempPath'], 0777, true);
         $pdf->Output(Yii::$app->params['tempPath'] . "$random.pdf", 'F');
 
-        $oggettoMail = "[" . $pic->distretto . "] PAI - " . $pic->cognome . " " . $pic->nome . " " . $pic->cf . ($picPrecedente ? (" [NUOVO, A SEGUITO DI " . $picPrecedente->motivazione_chiusura . "]") : "") . " - " . $pic->dittaScelta->denominazione;
+        $dist = "[" . $pic->distretto . "]";
+        $oggettoMail = " PAI - " . $pic->cognome . " " . $pic->nome . " " . $pic->cf . ($picPrecedente ? (" [NUOVO, A SEGUITO DI " . $picPrecedente->motivazione_chiusura . "]") : "") . " - " . $pic->dittaScelta->denominazione;
 
         $distrettiString = 'Messina NORD  -  <a href="mailto:adi.menord@asp.messina.it?subject=' . rawurlencode("CONFERMA RICEZIONE " . $oggettoMail) . '">adi.menord@asp.messina.it</a><br />
                     Messina SUD  -  <a href="mailto:adi.mesud@asp.messina.it?subject=' . rawurlencode("CONFERMA RICEZIONE " . $oggettoMail) . '">adi.mesud@asp.messina.it</a><br />
@@ -263,12 +264,13 @@ class AdiController extends \yii\web\Controller
                     Patti  -  <a href="mailto:adi.patti@asp.messina.it?subject=' . rawurlencode("CONFERMA RICEZIONE " . $oggettoMail) . '">adi.patti@asp.messina.it</a><br />
                     S.Agata  -  <a href="mailto:adi.sagata@asp.messina.it?subject=' . rawurlencode("CONFERMA RICEZIONE " . $oggettoMail) . '">adi.sagata@asp.messina.it</a><br />
                     Taormina  -  <a href="mailto:adi.taormina@asp.messina.it?subject=' . rawurlencode("CONFERMA RICEZIONE " . $oggettoMail) . '">adi.taormina@asp.messina.it</a>';
+        $oggettoMail = $dist . $oggettoMail;
         try {
             $altriFileDaAllegare = glob(Yii::$app->params['uploadPath'] . DIRECTORY_SEPARATOR . $pic->id . DIRECTORY_SEPARATOR . '*');
             $utente = str_replace("@asp.messina.it", "", $pic->id_utente);
             $message = Yii::$app->mailer->compose()->setHtmlBody(
-                "In data " . Yii::$app->formatter->asDate($pic->data_pic) . " l'utente " . $utente . " ha inserito un PAI a voi assegnato:<br /><br /> $pic->cognome $pic->nome con CF $pic->cf. <br /><br />".
-                ("<br /><b>Medico di base dell'assistito ".$pic->medico_rilevato."</b><br /><br />") .
+                "In data " . Yii::$app->formatter->asDate($pic->data_pic) . " l'utente " . $utente . " ha inserito un PAI a voi assegnato:<br /><br /> $pic->cognome $pic->nome con CF $pic->cf. <br /><br />" .
+                ("<br /><b>Medico di base dell'assistito " . $pic->medico_rilevato . "</b><br /><br />") .
                 " In allegato il PAI (e gli eventuali allegati).<br /><br />" .
                 ($picPrecedente ? ("<b>ATTENZIONE: il PAI precedente è stato chiuso in data " . Yii::$app->formatter->asDate($picPrecedente->fine_reale) . " con motivazione: <i>" . $picPrecedente->motivazione_chiusura . "</i></b><br /><br />") : "") .
                 ($pic->note ? "<b>EVENTUALI NOTE:</b><br />" . (trim($pic->note) === "" ? "nessuna" : $pic->note) . "<br /><br />" : "") .
