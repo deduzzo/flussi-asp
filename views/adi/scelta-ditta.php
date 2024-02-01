@@ -99,6 +99,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= $form->field($pic, 'recapiti')->hiddenInput()->label(false) ?>
     <?= $form->field($pic, 'medico_curante')->hiddenInput()->label(false) ?>
     <?= $form->field($pic, 'medico_prescrittore')->hiddenInput()->label(false) ?>
+    <?= $form->field($pic, 'medico_rilevato')->hiddenInput()->label(false) ?>
     <?= $form->field($pic, 'diagnosi')->hiddenInput()->label(false) ?>
     <?= $form->field($pic, 'nome_file')->hiddenInput()->label(false) ?>
     <?= $form->field($pic, 'id_utente')->hiddenInput()->label(false) ?>

@@ -96,11 +96,11 @@ class AdiController extends \yii\web\Controller
                         $assistito = Assistito::find()->where(['codice_fiscale' => $dati['cf']])->one();
                         if ($assistito) {
                             if ($assistito->codice_regionale_ts && $assistito->codice_regionale_nar && ($assistito->codice_regionale_ts === $assistito->codice_regionale_nar))
-                                $out = "Rilevato su NAR e TS: " . $assistito->medicoNar->nominativo . " - Distretto: " . strtoupper($assistito->medicoNar->distretto);
+                                $out = "rilevato su NAR e TS: " . $assistito->medicoNar->nominativo . " - ambito: " . strtoupper($assistito->medicoNar->distretto);
                             else if ($assistito->codice_regionale_nar)
-                                $out = "Rilevato su NAR: " . $assistito->medicoNar->nominativo . " - Distretto: " . strtoupper($assistito->medicoNar->distretto);
+                                $out = "rilevato su NAR: " . $assistito->medicoNar->nominativo . " - ambito: " . strtoupper($assistito->medicoNar->distretto);
                             else if ($assistito->codice_regionale_ts)
-                                $out = "Rilevato su TS: " . $assistito->medicoTs->nominativo . " - Distretto: " . strtoupper($assistito->medicoTs->distretto);
+                                $out = "rilevato su TS: " . $assistito->medicoTs->nominativo . " - ambito: " . strtoupper($assistito->medicoTs->distretto);
                         }
                         $newPic->medico_rilevato = $out;
 
@@ -260,10 +260,10 @@ class AdiController extends \yii\web\Controller
             $utente = str_replace("@asp.messina.it", "", $pic->id_utente);
             $message = Yii::$app->mailer->compose()->setHtmlBody(
                 "In data " . Yii::$app->formatter->asDate($pic->data_pic) . " l'utente " . $utente . " ha inserito un PAI a voi assegnato:<br /><br /> $pic->cognome $pic->nome con CF $pic->cf. <br /><br />".
-                ("<br /><b>Medico di base dell'assistito:</b>".$pic->medico_rilevato."<br /><br />") .
+                ("<br /><b>Medico di base dell'assistito ".$pic->medico_rilevato."</b><br /><br />") .
                 " In allegato il PAI (e gli eventuali allegati).<br /><br />" .
                 ($picPrecedente ? ("<b>ATTENZIONE: il PAI precedente è stato chiuso in data " . Yii::$app->formatter->asDate($picPrecedente->fine_reale) . " con motivazione: <i>" . $picPrecedente->motivazione_chiusura . "</i></b><br /><br />") : "") .
-                ($pic->note ? "<b>NOTE:</b><br />" . $pic->note . "<br /><br />" : "") .
+                ($pic->note ? "<b>EVENTUALI NOTE:</b><br />" . (trim($pic->note) === "" ? "nessuna" : $pic->note) . "<br /><br />" : "") .
                 ((count($altriFileDaAllegare) > 0) ? "<b> SONO PRESENTI ALLEGATI AGGIUNTIVI, si prega di prendere visione<br /><br /></b>" : "") .
                 "<b>Si prega di inviare conferma via mail al servizio ADI distrettuale di competenza utilizzando (se possibile) uno dei link in basso:</b><br /><br />"
                 . $distrettiString . "<br /><br /><br /><b>Cordiali saluti</b><br /><br />ASP 5 Messina")
