@@ -131,7 +131,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= $form->field($pic, 'fine_reale')->textInput(['maxlength' => true, 'disabled' => true]) ?>
                 </div>
                 <div class="col-md-6">
-                    <?= $form->field($pic, 'medico_rilevato')->textInput(['maxlength' => true, 'disabled' => true]) ?>
+                    <?= $form->field($pic, 'medico_rilevato')->textInput(['maxlength' => true, 'disabled' => true])->label("Medico di base dell'assistito") ?>
                 </div>
                 <div class="col-md-3">
                     <?= $form->field($pic, 'medico_curante')->textInput(['maxlength' => true, 'disabled' => true]) ?>
