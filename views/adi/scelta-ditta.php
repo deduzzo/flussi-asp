@@ -67,7 +67,7 @@ $this->params['breadcrumbs'][] = $this->title;
         // echo button to download file
     }
     else
-        $form->field($pic, 'distretto')->hiddenInput()->label(false);
+        echo $form->field($pic, 'distretto')->hiddenInput()->label(false);
 
     // div class success
     ?>
