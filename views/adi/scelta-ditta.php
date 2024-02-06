@@ -52,6 +52,23 @@ $this->params['breadcrumbs'][] = $this->title;
         echo "</div>";
         // echo button to download file
     }
+
+    if (str_contains(strtoupper($pic->distretto), 'MESSINA') && (!str_contains(strtoupper($pic->distretto), 'NORD') && !str_contains(strtoupper($pic->distretto), 'SUD'))) {
+        // div class success
+        echo "<div class='alert alert-warning' role='alert'>";
+        echo "<h4 class='alert-heading'>RILEVATO DISTRETTO DI MESSINA,</h4>";
+        echo "<p><b>Si prega di specificare se Messina NORD o SUD, l'informazione è richiesta per una corretta gestione del paziente da parte della ditta.</b>";
+        echo "</p><hr>";
+        echo $form->field($pic, 'distretto')->dropDownList(
+            [
+                'MESSINA NORD' => 'MESSINA NORD',
+                'MESSINA SUD' => 'MESSINA SUD'], ['prompt' => 'Seleziona il distretto (se nord o sud)', 'class' => 'form-control', 'style' => 'margin-top: 10px'])->label(false);
+        echo "</div>";
+        // echo button to download file
+    }
+    else
+        $form->field($pic, 'distretto')->hiddenInput()->label(false);
+
     // div class success
     ?>
 
@@ -67,7 +84,7 @@ $this->params['breadcrumbs'][] = $this->title;
     echo "<div class='alert alert-success' role='alert'>";
     echo $form->field($pic, 'ditta_scelta')->dropDownList($items, ['prompt' => 'Seleziona la ditta', 'class' => 'form-control'])->label("Ditta scelta dall'utente:", ['style' => 'font-weight: bold;']);
     // echo note text area
-    echo $form->field($pic, 'note')->textarea(['rows' => 3])->label('Eventuali note da inserire nella comunicazione (in caso di distretto di Messina indicare se NORD o SUD):', ['style' => 'font-weight: bold;']);
+    echo $form->field($pic, 'note')->textarea(['rows' => 3])->label('Eventuali note da inserire nella comunicazione:', ['style' => 'font-weight: bold;']);
 
     echo $form->field($ulterioriAllegati, 'file')->widget(FileInput::classname(), [
         'options' => ['multiple' => true],
@@ -90,7 +107,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= $form->field($pic, 'cf')->hiddenInput()->label(false) ?>
     <?= $form->field($pic, 'diagnosi')->hiddenInput()->label(false) ?>
     <?= $form->field($pic, 'piano_terapeutico')->hiddenInput()->label(false) ?>
-    <?= $form->field($pic, 'distretto')->hiddenInput()->label(false) ?>
     <?= $form->field($pic, 'data_pic')->hiddenInput()->label(false) ?>
     <?= $form->field($pic, 'cartella_aster')->hiddenInput()->label(false) ?>
     <?= $form->field($pic, 'dati_nascita')->hiddenInput()->label(false) ?>
@@ -112,6 +128,9 @@ $this->params['breadcrumbs'][] = $this->title;
         <fieldset>
             <legend>Sommario</legend>
             <div class="row">
+                <div class="col-md-12">
+                    <?= $form->field($pic, 'distretto')->textInput(['maxlength' => true, 'disabled' => true]) ?>
+                </div>
                 <div class="col-md-2">
                     <?= $form->field($pic, 'nome')->textInput(['maxlength' => true, 'disabled' => true]) ?>
                 </div>

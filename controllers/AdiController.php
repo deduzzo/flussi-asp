@@ -4,19 +4,15 @@ namespace app\controllers;
 
 use app\models\AdiPicSearch;
 use app\models\Assistito;
-use app\models\utils\SymfonyMailerComponent;
 use app\models\AdiPic;
 use app\models\FileUpload;
 use app\models\utils\Utils;
 use Carbon\Carbon;
 use Exception;
 use Mpdf\Mpdf;
-use PhpParser\Node\Expr\Cast\Object_;
-use TCPDF;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
-use yii\helpers\Json;
 use yii\web\UploadedFile;
 
 class AdiController extends \yii\web\Controller
@@ -370,6 +366,8 @@ class AdiController extends \yii\web\Controller
                     $picPresente = null;
                 }
             }
+            if (str_contains(strtoupper($pic->distretto), 'MESSINA') && (!str_contains(strtoupper($pic->distretto), 'NORD') && !str_contains(strtoupper($pic->distretto), 'SUD')))
+                $pic->addError('distretto', 'Si prega di specificare il distretto di competenza (se messina Nord o Sud)');
             if ($picPresente)
                 $pic->scenario = AdiPic::SCENARIO_PIC_PRESENTE;
             if ($pic->validate()) {
