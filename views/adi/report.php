@@ -35,6 +35,9 @@ echo $form->field($pic, 'ditta_scelta')->dropDownList($items, ['prompt' => 'Sele
         <legend>Sommario</legend>
         <div class="row">
             <div class="row">
+                <div class="col-md-12">
+                    <?= $form->field($pic, 'distretto')->textInput(['maxlength' => true, 'disabled' => true]) ?>
+                </div>
                 <div class="col-md-2">
                     <?= $form->field($pic, 'nome')->textInput(['maxlength' => true, 'disabled' => true]) ?>
                 </div>
