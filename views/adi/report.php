@@ -62,6 +62,9 @@ echo $form->field($pic, 'ditta_scelta')->dropDownList($items, ['prompt' => 'Sele
                 <div class="col-md-12">
                     <?= $form->field($pic, 'piano_terapeutico')->textarea(['rows' => 8, 'disabled' => true]) ?>
                 </div>
+                <div class="col-md-12">
+                    <?= $form->field($pic, 'note')->textarea(['rows' => 2, 'disabled' => true]) ?>
+                </div>
             <!-- elenco allegati -->
             <?php $path = Yii::$app->params['uploadPath'] . DIRECTORY_SEPARATOR . $pic->id;
             if (is_dir($path)) {
