@@ -354,9 +354,9 @@ class AdiController extends \yii\web\Controller
         $ulterioriAllegati->scenario = FileUpload::SCENARIO_MULTIPLE;
         $picPresente = null;
         if (Yii::$app->request->isPost) {
+            $pic->load(Yii::$app->request->post());
             if ($pic->fine_reale === "")
                 $pic->fine_reale = $pic->fine;
-            $pic->load(Yii::$app->request->post());
             // find if there is another pic with the same cf and that overlaps $pic->inizio and $pic->fine
             $picPresente = AdiPic::find()->where(['cf' => $pic->cf])
                 ->andWhere(['<=', 'inizio', $pic->fine_reale])
