@@ -47,6 +47,7 @@ class AdiController extends \yii\web\Controller
         $model->scenario = FileUpload::SCENARIO_SINGLE;
         if ($this->request->isPost) {
             $newPic = new AdiPic();
+            $newPic->id_utente = Yii::$app->user->identity->username;
             if (!array_key_exists('nuovo', $this->request->post())) {
                 $model->file = UploadedFile::getInstance($model, 'file');
                 // if !file
@@ -370,6 +371,8 @@ class AdiController extends \yii\web\Controller
                 $pic->addError('distretto', 'Si prega di specificare il distretto di competenza (se messina Nord o Sud)');
             if ($picPresente)
                 $pic->scenario = AdiPic::SCENARIO_PIC_PRESENTE;
+            if ($pic->fine_reale === "")
+                $pic->fine_reale = $pic->fine;
             if ($pic->validate()) {
                 $motivazione_chiusura = $pic->motivazione_chiusura;
                 $pic->motivazione_chiusura = null;

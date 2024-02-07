@@ -41,7 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= $form->field($pic, 'cartella_aster')->textInput(['maxlength' => true]) ?>
                 </div>
                 <div class="col-md-3">
-                    <?= $form->field($pic, 'id_utente')->textInput(['maxlength' => true]) ?>
+                    <?= $form->field($pic, 'id_utente')->textInput(['maxlength' => true,'disabled' => true]) ?>
                 </div>
                 <div class="col-md-2">
                     <?= $form->field($pic, 'num_contatto')->textInput(['maxlength' => true]) ?>

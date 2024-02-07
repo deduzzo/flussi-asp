@@ -69,7 +69,7 @@ class AdiPic extends \yii\db\ActiveRecord
     {
         return [
             [['data_pic', 'inizio', 'fine','fine_reale', 'data_ora_invio','data_ora_inserimento'], 'safe'],
-            [['distretto', 'data_pic','inizio','fine','fine_reale', 'cf', 'nome', 'cognome', 'dati_nascita', 'dati_residenza', 'recapiti', 'diagnosi', 'piano_terapeutico'], 'required'],
+            [['distretto', 'data_pic','inizio','fine', 'cf', 'nome', 'cognome', 'dati_nascita', 'dati_residenza', 'recapiti', 'diagnosi', 'piano_terapeutico'], 'required'],
             [['cf'], 'required'],
             [['piano_terapeutico', 'note','motivazione_chiusura'], 'string'],
             [['attivo'], 'boolean'],
