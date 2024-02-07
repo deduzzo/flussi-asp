@@ -47,7 +47,6 @@ class AdiController extends \yii\web\Controller
         $model->scenario = FileUpload::SCENARIO_SINGLE;
         if ($this->request->isPost) {
             $newPic = new AdiPic();
-            $newPic->id_utente = Yii::$app->user->identity->username;
             if (!array_key_exists('nuovo', $this->request->post())) {
                 $model->file = UploadedFile::getInstance($model, 'file');
                 // if !file
