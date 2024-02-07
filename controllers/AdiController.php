@@ -354,6 +354,8 @@ class AdiController extends \yii\web\Controller
         $ulterioriAllegati->scenario = FileUpload::SCENARIO_MULTIPLE;
         $picPresente = null;
         if (Yii::$app->request->isPost) {
+            if ($pic->fine_reale === "")
+                $pic->fine_reale = $pic->fine;
             $pic->load(Yii::$app->request->post());
             // find if there is another pic with the same cf and that overlaps $pic->inizio and $pic->fine
             $picPresente = AdiPic::find()->where(['cf' => $pic->cf])
@@ -371,8 +373,6 @@ class AdiController extends \yii\web\Controller
                 $pic->addError('distretto', 'Si prega di specificare il distretto di competenza (se messina Nord o Sud)');
             if ($picPresente)
                 $pic->scenario = AdiPic::SCENARIO_PIC_PRESENTE;
-            if ($pic->fine_reale === "")
-                $pic->fine_reale = $pic->fine;
             if ($pic->validate()) {
                 $motivazione_chiusura = $pic->motivazione_chiusura;
                 $pic->motivazione_chiusura = null;
