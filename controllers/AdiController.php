@@ -92,12 +92,16 @@ class AdiController extends \yii\web\Controller
                         try {
                             $assistito = Assistito::find()->where(['codice_fiscale' => $dati['cf']])->one();
                             if ($assistito) {
-                                if ($assistito->codice_regionale_ts && $assistito->codice_regionale_nar && ($assistito->codice_regionale_ts === $assistito->codice_regionale_nar))
-                                    $out = "rilevato su NAR e TS: " . $assistito->medicoNar->nominativo . " - ambito: " . strtoupper($assistito->medicoNar->distretto);
-                                else if ($assistito->codice_regionale_nar)
-                                    $out = "rilevato su NAR: " . $assistito->medicoNar->nominativo . " - ambito: " . strtoupper($assistito->medicoNar->distretto);
-                                else if ($assistito->codice_regionale_ts)
-                                    $out = "rilevato su TS: " . $assistito->medicoTs->nominativo . " - ambito: " . strtoupper($assistito->medicoTs->distretto);
+                                if ($assistito->codice_regionale_ts && $assistito->codice_regionale_nar && ($assistito->codice_regionale_ts === $assistito->codice_regionale_nar)) {
+                                    if ($assistito->medicoNar)
+                                        $out = "rilevato su NAR e TS: " . $assistito->medicoNar->nominativo . " - ambito: " . strtoupper($assistito->medicoNar->distretto);
+                                } else if ($assistito->codice_regionale_nar) {
+                                    if ($assistito->medicoNar)
+                                        $out = "rilevato su NAR: " . $assistito->medicoNar->nominativo . " - ambito: " . strtoupper($assistito->medicoNar->distretto);
+                                } else if ($assistito->codice_regionale_ts) {
+                                    if ($assistito->medicoTs)
+                                        $out = "rilevato su TS: " . $assistito->medicoTs->nominativo . " - ambito: " . strtoupper($assistito->medicoTs->distretto);
+                                }
                             }
                         } catch (\yii\db\Exception $e) {
                         }
@@ -109,7 +113,6 @@ class AdiController extends \yii\web\Controller
                             Yii::$app->session->setFlash('info', '<b>Sistema MOMENTANEAMENTE non disponibile per aggiornamenti, riprovare a breve.</b>');
                         else
                             Yii::$app->session->setFlash('error', 'Errore nel reperire i dati dal file caricato');
-                        echo $e;
                         return $this->render('nuova', [
                             'model' => $model,
                         ]);
@@ -249,7 +252,7 @@ class AdiController extends \yii\web\Controller
         $pdf->Output(Yii::$app->params['tempPath'] . "$random.pdf", 'F');
 
         $dist = "[" . $pic->distretto . "]";
-        $oggettoMail = " PAI - " . $pic->cognome . " " . $pic->nome . " " . $pic->cf . " #Aster: ".$pic->cartella_aster. ($picPrecedente ? (" [NUOVO, A SEGUITO DI " . $picPrecedente->motivazione_chiusura . "]") : "") . " - " . $pic->dittaScelta->denominazione;
+        $oggettoMail = " PAI - " . $pic->cognome . " " . $pic->nome . " " . $pic->cf . " #Aster: " . $pic->cartella_aster . ($picPrecedente ? (" [NUOVO, A SEGUITO DI " . $picPrecedente->motivazione_chiusura . "]") : "") . " - " . $pic->dittaScelta->denominazione;
 
         $distrettiString = 'Messina NORD  -  <a href="mailto:adi.menord@asp.messina.it?subject=' . rawurlencode("CONFERMA RICEZIONE " . $oggettoMail) . '">adi.menord@asp.messina.it</a><br />
                     Messina SUD  -  <a href="mailto:adi.mesud@asp.messina.it?subject=' . rawurlencode("CONFERMA RICEZIONE " . $oggettoMail) . '">adi.mesud@asp.messina.it</a><br />
