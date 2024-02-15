@@ -271,7 +271,7 @@ class AdiController extends \yii\web\Controller
                 "In data " . Yii::$app->formatter->asDate($pic->data_pic) . " l'utente " . $utente . " ha inserito un PAI a voi assegnato:<br /><br /> $pic->cognome $pic->nome con CF $pic->cf. <br /><br />" .
                 ("<br /><b>Medico di base dell'assistito " . $pic->medico_rilevato . "</b><br /><br />") .
                 " In allegato il PAI (e gli eventuali allegati).<br /><br />" .
-                ($picPrecedente ? ("<b>ATTENZIONE: il PAI precedente è stato chiuso in data " . Yii::$app->formatter->asDate($picPrecedente->fine_reale) . " con motivazione: <i>" . $picPrecedente->motivazione_chiusura . "</i></b><br /><br />") : "") .
+                ($picPrecedente ? ("<b>ATTENZIONE: il PAI precedente con data ".Yii::$app->formatter->asDate($picPrecedente->data_pic)." assegnato alla ditta ".$picPrecedente->dittaScelta->denominazione." è stato chiuso in data " . Yii::$app->formatter->asDate($picPrecedente->fine_reale) . " con motivazione: <i>" . $picPrecedente->motivazione_chiusura . "</i></b><br /><br />") : "") .
                 ($pic->note ? "<b>EVENTUALI NOTE:</b><br />" . (trim($pic->note) === "" ? "nessuna" : $pic->note) . "<br /><br />" : "") .
                 ((count($altriFileDaAllegare) > 0) ? "<b> SONO PRESENTI ALLEGATI AGGIUNTIVI, si prega di prendere visione<br /><br /></b>" : "") .
                 "<b>Si prega di inviare conferma via mail al servizio ADI distrettuale di competenza utilizzando (se possibile) uno dei link in basso:</b><br /><br />"
@@ -285,6 +285,16 @@ class AdiController extends \yii\web\Controller
                 $message->attach($altroFile, ['fileName' => basename($altroFile)]);
             }
             $message = $message->send();
+            if ($picPrecedente && $picPrecedente->dittaScelta !== $pic->dittaScelta)
+            {
+                $message2 = Yii::$app->mailer->compose()->setHtmlBody("<b>ATTENZIONE!!</b><br /><br />Il PAI attualmente attivo per l'assistito <br /> $pic->cognome $pic->nome con codice fiscale $pic->cf del ".Yii::$app->formatter->asDate($picPrecedente->data_pic)." è stato chiuso dall'utente ".$pic->id_utente." in data " . Yii::$app->formatter->asDate($picPrecedente->fine_reale) . " con motivazione: <b><i>" . $picPrecedente->motivazione_chiusura . "</i></b><br /><br />Il nuovo PAI è stato inviato alla nuova ditta scelta dall'assistito: <b>" . $pic->dittaScelta->denominazione . "</b><br /><br />
+                    Se ci dovesse essere qualsiasi problema o per qualsiasi chiarimento o richiesta di rettifica si prega di contattare il servizio ADI di competenza del distretto di <b>".$pic->distretto."</b><br /><br /><br /><b>Cordiali saluti</b><br /><br />ASP 5 Messina")
+                    ->setFrom(Yii::$app->params['adminEmail'])
+                    ->setCc(Yii::$app->params['ccEmail'])
+                    ->setTo($picPrecedente->dittaScelta->email)
+                    ->setSubject("CHIUSURA PAI per l'assistito $pic->cf motivazione: $picPrecedente->motivazione_chiusura")
+                    ->send();
+            }
             if ($message) {
                 $pic->data_ora_invio = date('Y-m-d H:i:s');
                 // remove temp file
