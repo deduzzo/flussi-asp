@@ -286,13 +286,14 @@ class AdiController extends \yii\web\Controller
                     $cc[] = "robertodedomenico@gmail.com";
             }
             $message = Yii::$app->mailer->compose()->setHtmlBody(
-                "In data " . Yii::$app->formatter->asDate($pic->data_pic) . " l'utente " . $utente . " ha inserito un PAI a voi assegnato:<br /><br /> $pic->cognome $pic->nome con CF $pic->cf. <br /><br />" .
+                "In data " . Yii::$app->formatter->asDate($pic->data_pic) . " l'utente " . $utente . " dell'ASP di Messina ha inserito un PAI per l'assistito:<br /><br /> $pic->cognome $pic->nome con CF $pic->cf. <br /><br />" .
+                 "DITTA PRESCELTA: <b>" . $pic->dittaScelta->denominazione . "</b><br />" .
                 ("<br /><b>Medico di base dell'assistito " . $pic->medico_rilevato . "</b>".(($pic->mail_medico && $pic->mail_medico !== "") ? (" indirizzo mail: <a href='mailto:".$pic->mail_medico."'>".$pic->mail_medico."</a><br /><br />") : "<br /><br />" )) .
                 " In allegato il PAI (e gli eventuali allegati).<br /><br />" .
                 ($picPrecedente ? ("<b>ATTENZIONE: il PAI precedente con data ".Yii::$app->formatter->asDate($picPrecedente->data_pic)." assegnato alla ditta ".$picPrecedente->dittaScelta->denominazione." è stato chiuso in data " . Yii::$app->formatter->asDate($picPrecedente->fine_reale) . " con motivazione: <i>" . $picPrecedente->motivazione_chiusura . "</i></b><br /><br />") : "") .
                 ($pic->note ? "<b>EVENTUALI NOTE:</b><br />" . (trim($pic->note) === "" ? "nessuna" : $pic->note) . "<br /><br />" : "") .
                 ((count($altriFileDaAllegare) > 0) ? "<b> SONO PRESENTI ALLEGATI AGGIUNTIVI, si prega di prendere visione<br /><br /></b>" : "") .
-                "<b>Si prega di inviare conferma via mail al servizio ADI distrettuale di competenza utilizzando (se possibile) uno dei link in basso:</b><br /><br />"
+                "<b>ESCLUSIVAMENTE PER LE DITTE: si prega di inviare conferma via mail al servizio ADI distrettuale di competenza utilizzando (se possibile) uno dei link in basso:</b><br /><br />"
                 . $distrettiString . "<br /><br /><br /><b>Cordiali saluti</b><br /><br />ASP 5 Messina")
                 ->setFrom(Yii::$app->params['adminEmail'])
                 ->setCc($cc)
