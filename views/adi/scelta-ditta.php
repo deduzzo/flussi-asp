@@ -65,7 +65,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'MESSINA SUD' => 'MESSINA SUD'], ['prompt' => 'Seleziona il distretto (se nord o sud)', 'class' => 'form-control', 'style' => 'margin-top: 10px'])->label(false);
         echo "</div>";
         // echo button to download file
-        echo $form->field($pic, 'distretto')->hiddenInput()->label(false);
+        //echo $form->field($pic, 'distretto')->hiddenInput()->label(false);
     }
     else {
         echo $form->field($pic, 'distretto')->hiddenInput()->label(false);
