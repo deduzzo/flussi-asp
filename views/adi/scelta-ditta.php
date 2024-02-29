@@ -62,10 +62,10 @@ $this->params['breadcrumbs'][] = $this->title;
         echo $form->field($pic, 'distretto')->dropDownList(
             [
                 'MESSINA NORD' => 'MESSINA NORD',
-                'MESSINA SUD' => 'MESSINA SUD'], ['prompt' => 'Seleziona il distretto (se nord o sud)', 'class' => 'form-control', 'style' => 'margin-top: 10px'])->label(false);
+                'MESSINA SUD' => 'MESSINA SUD'], ['prompt' => 'Seleziona il distretto (se nord o sud)', 'class' => 'form-control', 'style' => 'margin-top: 10px', 'value' => 'MESSINA'])->label(false);
         echo "</div>";
         // echo button to download file
-        //echo $form->field($pic, 'distretto')->hiddenInput()->label(false);
+        echo $form->field($pic, 'distretto')->hiddenInput()->label(false);
     }
     else {
         echo $form->field($pic, 'distretto')->hiddenInput()->label(false);
