@@ -84,7 +84,7 @@ class AdiPic extends \yii\db\ActiveRecord
             [['ditta_scelta'], 'exist', 'skipOnError' => true, 'targetClass' => DitteAccreditate::class, 'targetAttribute' => ['ditta_scelta' => 'id']],
             [['ditta_scelta'], 'required', 'on' => [self::SCENARIO_SCELTA_DITTA, self::SCENARIO_PIC_PRESENTE]],
             // mail_medico obbligatorio solo se copia_pai_inviata_al_medico è true
-            [['mail_medico'], 'required', 'when' => function ($model) {
+            [['mail_medico'], 'required','on' => [self::SCENARIO_SCELTA_DITTA], 'when' => function ($model) {
                 return $model->copia_pai_inviata_al_medico === true;
             }],
             [['motivazione_chiusura'], 'required', 'on' => self::SCENARIO_PIC_PRESENTE],
