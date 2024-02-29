@@ -254,7 +254,7 @@ class AdiController extends \yii\web\Controller
     private function inviaPdfAllaDitta($pic, $picPrecedente = null)
     {
         $pdf = $this->generaPDFPic($pic);
-        $test = true;
+        $test = false;
         // save file to temp folder
         $random = Yii::$app->security->generateRandomString(10);
         // create if not exist path Yii::$app->params['tempPath']
