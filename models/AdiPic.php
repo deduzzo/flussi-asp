@@ -28,6 +28,8 @@ use yii\helpers\Json;
  * @property string|null $medico_curante
  * @property string|null $medico_prescrittore
  * @property string|null $medico_rilevato
+ * @property string|null $mail_medico
+ * @property bool|null $copia_pai_inviata_al_medico
  * @property string|null $diagnosi
  * @property string|null $piano_terapeutico
  * @property string|null $nome_file
@@ -72,15 +74,19 @@ class AdiPic extends \yii\db\ActiveRecord
             [['distretto', 'data_pic','inizio','fine', 'cf', 'nome', 'cognome', 'dati_nascita', 'dati_residenza', 'recapiti', 'diagnosi', 'piano_terapeutico'], 'required'],
             [['cf'], 'required'],
             [['piano_terapeutico', 'note','motivazione_chiusura'], 'string'],
-            [['attivo'], 'boolean'],
+            [['attivo','copia_pai_inviata_al_medico'], 'boolean'],
             [['num_contatto', 'ditta_scelta'], 'integer'],
             [['distretto', 'cartella_aster', 'cf', 'cognome', 'nome', 'dati_nascita', 'dati_domicilio', 'recapiti', 'medico_curante', 'medico_prescrittore', 'nome_file'], 'string', 'max' => 100],
-            [['medico_rilevato'], 'string', 'max' => 200],
+            [['medico_rilevato','mail_medico'], 'string', 'max' => 200],
             [['dati_residenza'], 'string', 'max' => 200],
             [['diagnosi'], 'string', 'max' => 1000],
             [['id_utente'], 'string', 'max' => 50],
             [['ditta_scelta'], 'exist', 'skipOnError' => true, 'targetClass' => DitteAccreditate::class, 'targetAttribute' => ['ditta_scelta' => 'id']],
             [['ditta_scelta'], 'required', 'on' => [self::SCENARIO_SCELTA_DITTA, self::SCENARIO_PIC_PRESENTE]],
+            // mail_medico obbligatorio solo se copia_pai_inviata_al_medico è true
+            [['mail_medico'], 'required', 'when' => function ($model) {
+                return $model->copia_pai_inviata_al_medico === true;
+            }],
             [['motivazione_chiusura'], 'required', 'on' => self::SCENARIO_PIC_PRESENTE],
         ];
     }
@@ -108,6 +114,8 @@ class AdiPic extends \yii\db\ActiveRecord
             'medico_curante' => 'Medico Curante',
             'medico_prescrittore' => 'Medico Prescrittore',
             'medico_rilevato' => 'Medico Rilevato',
+            'mail_medico' => 'Mail Medico',
+            'copia_pai_inviata_al_medico' => 'Copia PAI Inviata al Medico',
             'diagnosi' => 'Diagnosi',
             'piano_terapeutico' => 'Piano Terapeutico (da/a - intervento - frequenza)',
             'nome_file' => 'Nome File',

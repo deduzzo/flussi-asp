@@ -26,6 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
     <?= $form->field($pic, 'nome_file')->hiddenInput()->label(false) ?>
     <?= $form->field($pic, 'medico_rilevato')->hiddenInput()->label(false) ?>
+    <?= $form->field($pic, 'mail_medico')->hiddenInput()->label(false) ?>
     <?= $form->field($pic, 'id_utente')->hiddenInput()->label(false) ?>
     <!-- fieldset with text dati pic -->
     <div class="form-group">

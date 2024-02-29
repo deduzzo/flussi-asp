@@ -4,7 +4,7 @@ use app\models\Assistito;
 use app\models\DitteAccreditate;
 use kartik\file\FileInput;
 use yii\bootstrap5\ActiveForm;
-use yii\helpers\Html;
+use yii\bootstrap5\Html;
 use yii\helpers\Url;
 
 /* @var $this yii\web\View */
@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
     if ($pic->scenario === $pic::SCENARIO_PIC_PRESENTE && $picPresente) {
         // div class success
         echo "<div class='alert alert-danger' role='alert'>";
-        echo "<h4 class='alert-heading'>ATTENZIONE!! PAI attivo già presente</h4>";
+        echo "<h4 class='alert-heading'>ATTENZIONE!! PAI attivo già presente nel sistema!</h4>";
         echo "<p><b>Il paziente ha già un PAI attivo (inizio " . Yii::$app->formatter->asDate($picPresente->inizio) . " fine " . Yii::$app->formatter->asDate($picPresente->fine_reale) . " scheda ASTER: " . $picPresente->cartella_aster . " inserito da " . str_replace("@asp.messina.it", "", $picPresente->id_utente) . ")  </b>";
         echo "<p><b>Si prega di verificare il PAI precedente e di procedere SOLTANTO se c'è stato un errore oppure si tratta di una rimodulazione o riattualizzazione.<br /> In qualsiasi altro caso " . Html::a('basta tornare alla home cliccando qui.', ['adi/index']) . "</b><br /><br />";
         echo Html::a('Visualizza il PAI precedente', ['adi/report', 'id' => $picPresente->id], ['class' => 'btn btn-danger', 'target' => '_blank']);
@@ -65,9 +65,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 'MESSINA SUD' => 'MESSINA SUD'], ['prompt' => 'Seleziona il distretto (se nord o sud)', 'class' => 'form-control', 'style' => 'margin-top: 10px'])->label(false);
         echo "</div>";
         // echo button to download file
-    }
-    else
         echo $form->field($pic, 'distretto')->hiddenInput()->label(false);
+    }
+    else {
+        echo $form->field($pic, 'distretto')->hiddenInput()->label(false);
+    }
 
     // div class success
     ?>
@@ -95,6 +97,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'browseLabel' => 'Scegli eventuali allegati (solo .pdf)',
         ]
     ]);
+
+    echo $form->field($pic,'copia_pai_inviata_al_medico')->checkbox(['label' => 'Invia copia mail al medico di base '.$pic->medico_rilevato, 'id' => 'conferma', 'required' => true,'checked' => true]);
+    echo $form->field($pic,'mail_medico')->textInput(['maxlength' => true, 'placeholder' => 'Indirizzo mail'])->label('Indirizzo mail:');
     echo "<div class='text-center'>";
     echo Html::submitButton('Conferma PIC e assegna alla ditta selezionata', ['class' => 'btn btn-success', "id" => "subBtn", "onclick" => "handleClick(this.id)"]);
     echo "</div>";

@@ -22,6 +22,7 @@ use yii\helpers\Url;$this->title = Yii::$app->name;
                 <a class="btn btn-outline-secondary" href="<?= Url::to(['/adi/index']); ?>">Elenco</a>
                 <a class="btn btn-secondary" href="<?= Url::to(['/adi/cerca']); ?>">Cerca</a>
             </div>
+            <?php /*\app\models\utils\Utils::aggiornaMailMedici("D:\DATI\Download\mmgpediatri.xlsx"); */?>
             <div class="col-lg-4 mb-3">
                 <!--<h2>Heading</h2>
 

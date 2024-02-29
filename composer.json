@@ -25,6 +25,7 @@
         "yii2mod/yii2-enum": "*",
         "ext-ldap": "*",
         "mpdf/mpdf": "^8.2",
+        "box/spout": "^3.3",
         "kartik-v/yii2-icons": "dev-master"
     },
     "require-dev": {

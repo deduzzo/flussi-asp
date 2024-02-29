@@ -3,6 +3,10 @@
 namespace app\models\utils;
 
 use app\models\AdiPic;
+use app\models\enums\PagamentiConIban;
+use app\models\GruppoPagamento;
+use Box\Spout\Reader\Common\Creator\ReaderEntityFactory;
+use Box\Spout\Reader\XLSX\Sheet;
 use yii\helpers\Json;
 
 class Utils
@@ -53,7 +57,7 @@ class Utils
             } else {
                 $rigaTemp = substr($text1[$i], 0, 21) . "\t";
                 $rigaTemp .= substr($text1[$i], 21, strlen($text1[$i]) - 21);
-                while ((substr($text1[$i + 1], 2, 1) !== "/" && (substr($text1[$i + 1], strlen($text1[$i + 1]) -5 , 4) !== "onal")) && ($i < $posFine - 1)) {
+                while ((substr($text1[$i + 1], 2, 1) !== "/" && (substr($text1[$i + 1], strlen($text1[$i + 1]) - 5, 4) !== "onal")) && ($i < $posFine - 1)) {
                     $rigaTemp .= " " . $text1[$i + 1];
                     $i++;
                 }
@@ -116,4 +120,51 @@ class Utils
 
         return rmdir($dir);
     }
+
+    public static function getObjectFromFileExcel($path)
+    {
+        ini_set('memory_limit', '-1');
+        set_time_limit(0);
+        $reader = ReaderEntityFactory::createReaderFromFile($path);
+        $reader->open($path);
+        $header = [];
+        $rowIndex = 0;
+        $out = [];
+        $nomiFogli = [];
+        foreach ($reader->getSheetIterator() as $idxSheet => $sheet) {
+            /* @var Sheet $sheet */
+            $idxSheet = $idxSheet -1 ;
+            $out[$idxSheet] = [];
+            $nomiFogli[$idxSheet] = $sheet->getName();
+            foreach ($sheet->getRowIterator() as $row) {
+                $newRow = [];
+                foreach ($row->getCells() as $idxcel => $cel) {
+                    $newRow[$idxcel] = $cel->getValue();
+                }
+                if ($rowIndex === 0) {
+                    foreach ($newRow as $idx => $cell)
+                        $header[$idx] = $cell;
+                } else {
+                    $out[$idxSheet][$rowIndex] = [];
+                    foreach ($newRow as $idxCol => $col) {
+                        $out[$idxSheet][$rowIndex][$header[$idxCol]] = $col;
+                    }
+                }
+                $rowIndex++;
+            }
+        }
+        return ['header' => $header, 'data' => $out, 'nomiFogli' => $nomiFogli];
+    }
+
+    public static function aggiornaMailMedici($path) {
+        $data = self::getObjectFromFileExcel($path);
+        foreach ($data['data'][0] as $row) {
+            $medico = \app\models\Medico::findOne(['codice_regionale' => $row['Cod. regionale']]);
+            if ($medico && $row['email'] !== null && $row['email'] !== "") {
+                $medico->mail = $row['email'];
+                $medico->save();
+            }
+        }
+    }
+
 }

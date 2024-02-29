@@ -89,24 +89,31 @@ class AdiController extends \yii\web\Controller
                         $newPic->distretto = $dati['distretto'];
                         $newPic->id_utente = Yii::$app->user->identity->username;
                         $out = "non presente nei sistemi";
+                        $mailMedico = null;
                         try {
                             $assistito = Assistito::find()->where(['codice_fiscale' => $dati['cf']])->one();
                             if ($assistito) {
                                 if ($assistito->codice_regionale_ts && $assistito->codice_regionale_nar && ($assistito->codice_regionale_ts === $assistito->codice_regionale_nar)) {
-                                    if ($assistito->medicoNar)
+                                    if ($assistito->medicoNar) {
                                         $out = "rilevato su NAR e TS: " . $assistito->medicoNar->nominativo . " - ambito: " . strtoupper($assistito->medicoNar->distretto);
+                                        $mailMedico = $assistito->medicoNar->mail;
+                                    }
                                 } else if ($assistito->codice_regionale_nar) {
-                                    if ($assistito->medicoNar)
+                                    if ($assistito->medicoNar) {
                                         $out = "rilevato su NAR: " . $assistito->medicoNar->nominativo . " - ambito: " . strtoupper($assistito->medicoNar->distretto);
+                                        $mailMedico = $assistito->medicoNar->mail;
+                                    }
                                 } else if ($assistito->codice_regionale_ts) {
-                                    if ($assistito->medicoTs)
+                                    if ($assistito->medicoTs) {
                                         $out = "rilevato su TS: " . $assistito->medicoTs->nominativo . " - ambito: " . strtoupper($assistito->medicoTs->distretto);
+                                        $mailMedico = $assistito->medicoTs->mail;
+                                    }
                                 }
                             }
                         } catch (\yii\db\Exception $e) {
                         }
                         $newPic->medico_rilevato = $out;
-
+                        $newPic->mail_medico = $mailMedico;
                     } catch (\Exception $e) {
                         $aggiornamento = false;
                         if ($aggiornamento)
@@ -127,6 +134,10 @@ class AdiController extends \yii\web\Controller
         return $this->render('nuova', [
             'model' => $model,
         ]);
+
+    }
+
+    public function actionAggiornaMail() {
 
     }
 
@@ -267,9 +278,16 @@ class AdiController extends \yii\web\Controller
         try {
             $altriFileDaAllegare = glob(Yii::$app->params['uploadPath'] . DIRECTORY_SEPARATOR . $pic->id . DIRECTORY_SEPARATOR . '*');
             $utente = str_replace("@asp.messina.it", "", $pic->id_utente);
+            $cc = [Yii::$app->params['ccEmail']];
+            if ($pic->mail_medico && $pic->mail_medico !== "") {
+                if (!$test)
+                    $cc[] = $pic->mail_medico;
+                else
+                    $cc[] = "robertodedomenico@gmail.com";
+            }
             $message = Yii::$app->mailer->compose()->setHtmlBody(
                 "In data " . Yii::$app->formatter->asDate($pic->data_pic) . " l'utente " . $utente . " ha inserito un PAI a voi assegnato:<br /><br /> $pic->cognome $pic->nome con CF $pic->cf. <br /><br />" .
-                ("<br /><b>Medico di base dell'assistito " . $pic->medico_rilevato . "</b><br /><br />") .
+                ("<br /><b>Medico di base dell'assistito " . $pic->medico_rilevato . "</b>".(($pic->mail_medico && $pic->mail_medico !== "") ? (" indirizzo mail: <a href='mailto:".$pic->mail_medico."'>".$pic->mail_medico."</a><br /><br />") : "<br /><br />" )) .
                 " In allegato il PAI (e gli eventuali allegati).<br /><br />" .
                 ($picPrecedente ? ("<b>ATTENZIONE: il PAI precedente con data ".Yii::$app->formatter->asDate($picPrecedente->data_pic)." assegnato alla ditta ".$picPrecedente->dittaScelta->denominazione." è stato chiuso in data " . Yii::$app->formatter->asDate($picPrecedente->fine_reale) . " con motivazione: <i>" . $picPrecedente->motivazione_chiusura . "</i></b><br /><br />") : "") .
                 ($pic->note ? "<b>EVENTUALI NOTE:</b><br />" . (trim($pic->note) === "" ? "nessuna" : $pic->note) . "<br /><br />" : "") .
@@ -277,7 +295,7 @@ class AdiController extends \yii\web\Controller
                 "<b>Si prega di inviare conferma via mail al servizio ADI distrettuale di competenza utilizzando (se possibile) uno dei link in basso:</b><br /><br />"
                 . $distrettiString . "<br /><br /><br /><b>Cordiali saluti</b><br /><br />ASP 5 Messina")
                 ->setFrom(Yii::$app->params['adminEmail'])
-                ->setCc(Yii::$app->params['ccEmail'])
+                ->setCc($cc)
                 ->setTo($test ? 'roberto.dedomenico@asp.messina.it' : $pic->dittaScelta->email)
                 ->setSubject($oggettoMail)
                 ->attach(Yii::$app->params['tempPath'] . "$random.pdf", ['fileName' => "PAI-$pic->cf.pdf"]);
