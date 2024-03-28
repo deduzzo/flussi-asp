@@ -47,6 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'ERRORE' => 'ERRORE: PAI precedente inserito per errore',
                 'CAMBIO_DITTA_ASSISTITO' => 'CAMBIO DITTA: L\'assistito ha deciso di cambiare ditta fornitrice',
                 'RINUNCIA_ASSISTITO' => 'RINUNCIA ASSISTITO: Rinuncia dell\'assistito',
+                'ASSISTITO_RICOVERATO' => 'ASSISTITO RICOVERATO: Assistito ricoverato, PAI non avviabile',
                 'RINUNCIA_DITTA' => 'PROBLEMA DITTA: Rinuncia o problema legato alla ditta precedente',
             ], ['prompt' => 'Seleziona la motivazione', 'class' => 'form-control', 'style' => 'margin-top: 10px'])->label(false);
         echo "</div>";
