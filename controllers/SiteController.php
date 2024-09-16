@@ -2,6 +2,9 @@
 
 namespace app\controllers;
 
+use app\models\enums\TipologiaLogin;
+use app\models\User;
+use app\models\Utenti;
 use app\models\utils\Utils;
 use Yii;
 use yii\filters\AccessControl;
@@ -98,11 +101,12 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
-    public function actionLoginInternal()
+    public function actionLoginInternal($username,$password)
     {
         //return in json
         Yii::$app->response->format = Response::FORMAT_JSON;
+        $user = User::findByUsernameAndPassword($username,$password,TipologiaLogin::DOMINIO);
 
-        return ['success' => 'true'];
+        return ['success' => $user != null, 'user' => $user];
     }
 }
