@@ -107,6 +107,6 @@ class SiteController extends Controller
         Yii::$app->response->format = Response::FORMAT_JSON;
         $user = User::findByUsernameAndPassword($username,$password,TipologiaLogin::DOMINIO);
 
-        return ['success' => $user != null, 'user' => $user];
+        return ['success' => $user != null];
     }
 }
