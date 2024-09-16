@@ -22,7 +22,7 @@
         "kartik-v/yii2-widget-fileinput": "dev-master",
         "asika/pdf2text": "^1.0",
         "nesbot/carbon": "^2.72",
-        "yii2mod/yii2-enum": "*",
+        "yii2mod/yii2-enum": "^1.7",
         "ext-ldap": "*",
         "mpdf/mpdf": "^8.2",
         "box/spout": "^3.3",

@@ -23,7 +23,7 @@ class SiteController extends Controller
                 'only' => ['logout'],
                 'rules' => [
                     [
-                        'actions' => ['logout'],
+                        'actions' => ['logout', 'login-internal'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -96,5 +96,13 @@ class SiteController extends Controller
         Yii::$app->user->logout();
 
         return $this->goHome();
+    }
+
+    public function actionLoginInternal()
+    {
+        //return in json
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        return ['success' => 'true'];
     }
 }
