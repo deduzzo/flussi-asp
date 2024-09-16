@@ -62,7 +62,7 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
                 if (!str_contains($username, "@asp.messina.it"))
                     $username .= "@asp.messina.it";
                 $ldap = ldap_connect("asp.messina.it");
-                print_r($ldap);
+                //print_r($ldap);
                 if ($ldap) {
                     ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);  // Imposta la versione del protocollo LDAP
                     ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
