@@ -43,6 +43,7 @@ class AdiController extends \yii\web\Controller
 
     public function actionNuova()
     {
+
         $model = new FileUpload();
         $model->scenario = FileUpload::SCENARIO_SINGLE;
         if ($this->request->isPost) {

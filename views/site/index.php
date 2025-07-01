@@ -18,9 +18,13 @@ use yii\helpers\Url;$this->title = Yii::$app->name;
                 <h2>ADI - Assistenza Domiciliare Integrata</h2>
 
                 <p>Creazione e invio PAI in regime di convenzionamento</p>
-                <a class="btn btn-primary" href="<?= Url::to(['/adi/nuova']); ?>">Nuovo PAI</a>
-                <a class="btn btn-outline-secondary" href="<?= Url::to(['/adi/index']); ?>">Elenco</a>
-                <a class="btn btn-secondary" href="<?= Url::to(['/adi/cerca']); ?>">Cerca</a>
+                <!-- mostra info "Applicazione non disponibile, usare Icaro per la gestione dei PAI" -->
+                <div class="alert alert-warning" role="alert">
+                    Applicazione non disponibile, usare Icaro per la gestione dei PAI.
+                </div>
+<!--                <a class="btn btn-primary" href="<?php /*= Url::to(['/adi/nuova']); */?>">Nuovo PAI</a>
+                <a class="btn btn-outline-secondary" href="<?php /*= Url::to(['/adi/index']); */?>">Elenco</a>
+                <a class="btn btn-secondary" href="<?php /*= Url::to(['/adi/cerca']); */?>">Cerca</a>-->
             </div>
             <?php /*\app\models\utils\Utils::aggiornaMailMedici("D:\DATI\Download\mmgpediatri.xlsx"); */?>
             <div class="col-lg-4 mb-3">
