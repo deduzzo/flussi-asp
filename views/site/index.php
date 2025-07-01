@@ -20,7 +20,7 @@ use yii\helpers\Url;$this->title = Yii::$app->name;
                 <p>Creazione e invio PAI in regime di convenzionamento</p>
                 <!-- mostra info "Applicazione non disponibile, usare Icaro per la gestione dei PAI, link: https://login.maggioli.cloud" -->
                 <div class="alert alert-warning" role="alert">
-                    Applicazione non disponibile, usare IcaroEvo per la gestione dei PAI.
+                    Applicazione non disponibile, usare IcaroEvo per la gestione dei PAI.<br />
                     <a href="https://login.maggioli.cloud" class="alert-link">Vai a IcaroEvo</a>
                 </div>
 <!--                <a class="btn btn-primary" href="<?php /*= Url::to(['/adi/nuova']); */?>">Nuovo PAI</a>
