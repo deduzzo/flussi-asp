@@ -3,6 +3,7 @@
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 $db2 = require __DIR__ . '/db2.php';
+$db3 = require __DIR__ . '/db3.php';
 $mail = require __DIR__ . '/mail.php';
 
 $config = [
@@ -48,6 +49,7 @@ $config = [
         ],
         'db' => $db,
         'db2' => $db2,
+        'db3' => $db3,
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
