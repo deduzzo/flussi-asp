@@ -27,7 +27,7 @@ class AdiController extends \yii\web\Controller
                 'rules' => [
                     [
                         'actions' => ['index', 'scelta-ditta', 'report', 'cerca', 'nuova', 'download'],
-                        'allow' => false,
+                        'allow' => true,
                         'roles' => ['@'],
                     ],
                 ],
