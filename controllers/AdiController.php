@@ -266,8 +266,7 @@ class AdiController extends \yii\web\Controller
         $dist = "[" . $pic->distretto . "]";
         $oggettoMail = " PAI - " . $pic->cognome . " " . $pic->nome . " " . $pic->cf . " #Aster: " . $pic->cartella_aster . ($picPrecedente ? (" [NUOVO, A SEGUITO DI " . $picPrecedente->motivazione_chiusura . "]") : "") . " - " . $pic->dittaScelta->denominazione;
 
-        $distrettiString = 'Messina NORD  -  <a href="mailto:adi.menord@asp.messina.it?subject=' . rawurlencode("CONFERMA RICEZIONE " . $oggettoMail) . '">adi.menord@asp.messina.it</a><br />
-                    Messina SUD  -  <a href="mailto:adi.mesud@asp.messina.it?subject=' . rawurlencode("CONFERMA RICEZIONE " . $oggettoMail) . '">adi.mesud@asp.messina.it</a><br />
+        $distrettiString = 'Messina NORD E SUD (unica nuova mail)  -  <a href="mailto:adirsa.distretto.messina@asp.messina.it?subject=' . rawurlencode("CONFERMA RICEZIONE " . $oggettoMail) . '">adirsa.distretto.messina@asp.messina.it</a><br />
                     Barcellona  -  <a href="mailto:adi.barcellona-pg@asp.messina.it?subject=' . rawurlencode("CONFERMA RICEZIONE " . $oggettoMail) . '">adi.barcellona-pg@asp.messina.it</a><br />
                     Lipari  -  <a href="mailto:adi.lipari@asp.messina.it?subject=' . rawurlencode("CONFERMA RICEZIONE " . $oggettoMail) . '">adi.lipari@asp.messina.it</a><br />
                     Milazzo  -  <a href="mailto:adi.milazzo@asp.messina.it?subject=' . rawurlencode("CONFERMA RICEZIONE " . $oggettoMail) . '">adi.milazzo@asp.messina.it</a><br />
