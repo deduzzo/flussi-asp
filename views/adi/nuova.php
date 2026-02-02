@@ -13,6 +13,9 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="site-about">
+    <?php $attivo = false; ?>
+    <!-- if attivo is true -->
+    <?php if ($attivo): ?>
     <h1><?= Html::encode($this->title) ?></h1>
     <p>Seleziona l'allegato PDF del PAI da gestire, oppure creane uno nuovo:</p>
 
@@ -39,4 +42,10 @@ $this->params['breadcrumbs'][] = $this->title;
     echo '</div>';
 
     ActiveForm::end(); ?>
+    <?php else: ?>
+        <div class="alert alert-warning" role="alert">
+            <h4 class="alert-heading">Servizio non attivo</h4>
+            <p>Il servizio di gestione dell'ADI non è attualmente attivo. Utilizzare il portale ADI Maggioli per inserire un nuovo pai</p>
+        </div>
+    <?php endif; ?>
 </div>
